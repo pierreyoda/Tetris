@@ -16,5 +16,6 @@ public class TetrisWindow extends JFrame {
 		setTitle(WINDOW_TITLE);
 		
 		add(view);
+		pack();
 	}
 }

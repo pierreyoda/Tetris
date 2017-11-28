@@ -18,6 +18,7 @@ public class TetrisModel implements ActionListener {
 	private Random random = new Random();
 
 	private int score = 0;
+	private Tetrimino currentTetrimino;
 	private ArrayList<Tetrimino> tetriminos = new ArrayList();
 
 	public TetrisModel() {
@@ -46,12 +47,32 @@ public class TetrisModel implements ActionListener {
 		final TetriminoColor color = TetriminoColor.getRandomThemeColor();
 		final TetriminoType type = TetriminoType.values()[random.nextInt(TetriminoType.values().length)];
 		System.out.println(type);
-		tetriminos.add(new Tetrimino(color, type, random.nextInt(BOARD_WIDTH),
-									 0, Tetrimino.getBlocksFromType(type)));
+		
+		final Tetrimino tetrimino = new Tetrimino(color, type,
+				random.nextInt(BOARD_WIDTH),
+				0, Tetrimino.getBlocksFromType(type));
+		tetriminos.add(tetrimino);
+		currentTetrimino = tetrimino;
 	}
 
 	public int getScore() { return score; }
 
 	public ArrayList<Tetrimino> getTetriminos() { return tetriminos; }
+
+	public void rotate() {
+		currentTetrimino.rotate(true);
+	}
+	
+	public void speedUpFall() {
+		currentTetrimino.move(0, +1, BOARD_WIDTH, BOARD_HEIGHT);
+	}
+	
+	public void left() {
+		currentTetrimino.move(-1, 0, BOARD_WIDTH, BOARD_HEIGHT);
+	}
+	
+	public void right() {
+		currentTetrimino.move(+1, 0, BOARD_WIDTH, BOARD_HEIGHT);
+	}
 
 }

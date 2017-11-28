@@ -25,8 +25,9 @@ public class TetrisView extends JPanel implements KeyListener {
 		this.controller = controller;
 		
 		setSize(TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE, TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE);
-		//setFocusTraversalKeysEnabled(false);
+		setFocusable(true);
 		addKeyListener(this);
+		requestFocusInWindow();
 	}
 	
 	public void paint(Graphics g) {
@@ -43,14 +44,18 @@ public class TetrisView extends JPanel implements KeyListener {
 		final int keyCode = e.getKeyCode();
 		switch (keyCode) {
 		case KeyEvent.VK_UP:
+		case KeyEvent.VK_KP_UP:
 			controller.keyUp();
 			break;
 		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_KP_DOWN:
 			controller.keyDown();
 		case KeyEvent.VK_LEFT:
+		case KeyEvent.VK_KP_LEFT:
 			controller.keyLeft();
 			break;
 		case KeyEvent.VK_RIGHT:
+		case KeyEvent.VK_KP_RIGHT:
 			controller.keyRight();
 		}
 	}
