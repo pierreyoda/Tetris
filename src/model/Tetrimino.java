@@ -16,7 +16,7 @@ public class Tetrimino {
 	 * The array defining the geometry of the tetrimino. True means that a block is
 	 * present.
 	 */
-	private boolean[][] blocks = new boolean[4][4];
+	private boolean[][][] blocks = new boolean[4][4][4];
 
 	/**
 	 * The X and Y positions on the board. X is the horizontal axis and Y the
@@ -33,10 +33,15 @@ public class Tetrimino {
 	 * The type of the tetrimino.
 	 */
 	private TetriminoType type;
+	
+	/**
+	 * The current rotation state.
+	 */
+	private int rotation = 0;
 
 	public Tetrimino(final TetriminoColor color, final TetriminoType type,
 					 final int positionX, final int positionY,
-					 final boolean[][] blocks) {
+					 final boolean[][][] blocks) {
 		this.color = color;
 		this.type = type;
 		this.positionX = positionX;
@@ -46,7 +51,7 @@ public class Tetrimino {
 		// Get dimensions
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
-				if (blocks[i][j]) {
+				if (blocks[0][i][j]) {
 					sizeX = i + 1;
 					sizeY = j + 1;
 				}
@@ -54,49 +59,150 @@ public class Tetrimino {
 		}
 	}
 
-	public static boolean[][] getBlocksFromType(final TetriminoType type) {
+	public static boolean[][][] getBlocksFromType(final TetriminoType type) {
 		switch (type) {
 		case STICK:
-			return new boolean[][] { { true, true, true, true }, { false, false, false, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ true, true, true, true }, { false, false, false, false },
+				    { false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, true, false }, { false, false, true, false },
+				    { false, false, true, false }, { false, false, true, false },
+				},
+				{
+					{ false, false, false, false }, { false, false, false, false },
+					{ true, true, true, true }, { false, false, false, false },
+				},
+				{
+					{ false, true, false, false }, { false, true, false, false },
+					{ false, true, false, false }, { false, true, false, false },
+				},
+			};
 		case BOX:
-			return new boolean[][] { { true, true, false, false }, { true, true, false, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ true, true, false, false }, { true, true, false, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ true, true, false, false }, { true, true, false, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ true, true, false, false }, { true, true, false, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ true, true, false, false }, { true, true, false, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+			};
 		case STAIRS:
-			return new boolean[][] { { false, true, false, false }, { true, true, true, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ false, true, false, false }, { true, true, true, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, true, false, false }, { false, true, true, false },
+					{ false, true, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, false, false }, { true, true, true, false },
+					{ false, true, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, true, false, false }, { true, true, false, false },
+					{ false, true, false, false }, { false, false, false, false },
+				},
+			};
 		case RIGHT_SNAKE:
-			return new boolean[][] { { false, false, true, true }, { false, true, true, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ false, false, true, true }, { false, true, true, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, true, false }, { false, false, true, true },
+					{ false, false, false, true }, { false, false, false, false },
+				},
+				{
+					{ false, false, false, false }, { false, false, true, true },
+					{ false, true, true, false }, { false, false, false, false }
+				},
+				{
+					{ false, true, false, false }, { false, true, true, false },
+					{ false, false, true, false }, { false, false, false, false },
+				},
+			};
 		case LEFT_SNAKE:
-			return new boolean[][] { { true, true, false, false }, { false, true, true, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ true, true, false, false }, { false, true, true, false },
+					{ false, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, true, false }, { false, true, true, false },
+					{ false, true, false, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, false, false }, { true, true, false, false },
+					{ false, true, true, false }, { false, false, false, false }
+				},
+				{
+					{ false, true, false, false }, { true, true, false, false },
+					{ true, false, false, false }, { false, false, false, false },
+				},
+			};
 		case LEFT_L:
-			return new boolean[][] { { true, false, false, false }, { true, true, true, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ true, false, false, false }, { true, true, true, false },
+					{ false, false, false, false }, { false, false, false, false }
+				},
+				{
+					{ false, true, true, false }, { false, true, false, false },
+					{ false, true, false, false }, { false, false, false, false }
+				},
+				{
+					{ false, false, false, false }, { true, true, true, false },
+					{ false, false, true, false }, { false, false, false, false },
+				},
+				{
+					{ false, true, false, false }, { false, true, false, false },
+					{ true, true, false, false }, { false, false, false, false },
+				},
+			};
 		case RIGHT_L:
-			return new boolean[][] { { false, false, true, false }, { true, true, true, false },
-					{ false, false, false, false }, { false, false, false, false } };
-		default:
-			return new boolean[][] { { false, false, false, false }, { false, false, false, false },
-					{ false, false, false, false }, { false, false, false, false } };
+			return new boolean[][][] {
+				{
+					{ false, false, true, false }, { true, true, true, false },
+					{ false, false, false, false }, { false, false, false, false }
+				},
+				{
+					{ false, true, false, false }, { false, true, false, false },
+					{ false, true, true, false }, { false, false, false, false },
+				},
+				{
+					{ false, false, false, false }, { true, true, true, false },
+					{ true, false, false, false }, { false, false, false, false },
+				},
+				{
+					{ true, true, false, false }, { false, true, false, false },
+					{ false, true, false, false }, { false, false, false, false },
+				},
+			};
 		}
+		return null;
 	}
 
 	public void rotate(final boolean right) {
 		if (right) {
-			// transpose
-			final boolean[][] original = blocks;
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					blocks[i][j] = original[j][i];
-				}
-			}
-			
-			// reverse
-			for (int i = 0; i < 4; i++) {
-				Collections.reverse(Arrays.asList(blocks[i]));
-			}
+			rotation  = (rotation + 1) % 4;
+		} else {
+			rotation = (rotation - 1) % 4;
 		}
 	}
 
@@ -130,7 +236,7 @@ public class Tetrimino {
 	public boolean getBlock(final int x, final int y) {
 		if (x < 0 || x >= 4 || y < 0 || y >= 4)
 			return false;
-		return blocks[x][y];
+		return blocks[rotation][x][y];
 	}
 
 }
