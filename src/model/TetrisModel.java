@@ -90,6 +90,7 @@ public class TetrisModel implements ActionListener {
 			board.addTetrimino(t);
 			generateNewTetrimino();
 			System.out.println(String.format("collision with bottom (x = %d) !", t.getX()));
+			return;
 		}
 		
 		// at this point we can safely move the tetrimino
