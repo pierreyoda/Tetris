@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import control.TetrisController;
 import model.Tetrimino;
+import model.TetrisBoard;
 import model.TetrisBoardCell;
 import model.TetrisModel;
 
@@ -27,8 +28,8 @@ public class TetrisView extends JPanel implements KeyListener {
 		this.model = model;
 		this.controller = controller;
 		
-		setSize(TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE, TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE);
-		setPreferredSize(new Dimension(TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE, TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE));
+		setSize(TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE, TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE);
+		setPreferredSize(new Dimension(TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE, TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE));
 
 		setFocusable(true);
 		requestFocusInWindow();
@@ -38,8 +39,8 @@ public class TetrisView extends JPanel implements KeyListener {
 	
 	public void paint(Graphics g) {
 		g.setColor(BACKGROUND_COLOR);
-		g.fillRect(0, 0, TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE,
-				   TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE);
+		g.fillRect(0, 0, TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE,
+				   TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE);
 		
 		renderGame(g);
 		renderHud(g);
@@ -89,8 +90,8 @@ public class TetrisView extends JPanel implements KeyListener {
 
 		// render the rest of the blocks
 		final TetrisBoardCell[][] cells = model.getBoardCells();
-		for (int y = 0; y < TetrisModel.BOARD_HEIGHT; y++) {
-			for (int x = 0; x < TetrisModel.BOARD_WIDTH; x++) {
+		for (int y = 0; y < TetrisBoard.HEIGHT; y++) {
+			for (int x = 0; x < TetrisBoard.WIDTH; x++) {
 				final TetrisBoardCell cell = cells[y][x];
 				if (!cell.present) continue;
 				

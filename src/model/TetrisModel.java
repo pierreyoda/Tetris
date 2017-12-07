@@ -9,10 +9,8 @@ import javax.swing.Timer;
 import view.TetrisView;
 
 public class TetrisModel implements ActionListener {
-	public static int BOARD_WIDTH = 10;
-	public static int BOARD_HEIGHT = 22;
 	public static int PIECE_SIZE = 35;
-	private static float GAME_SPEED = 1.f;
+	private static int GAME_TICK = 250; // update interval, in ms
 
 	private Timer timer;
 	private Random random = new Random();
@@ -29,7 +27,7 @@ public class TetrisModel implements ActionListener {
 		generateNewTetrimino();
 
 		// set up a timer to call the actionPerformed method at fixed intervals
-		timer = new Timer((int) (GAME_SPEED * 1000.f), this);
+		timer = new Timer(GAME_TICK, this);
 		timer.start();
 	}
 
@@ -58,11 +56,17 @@ public class TetrisModel implements ActionListener {
 		// current tetrimino fall
 		moveCurrentTetrimino(0, +1);
 		
-		// check for lines cleared
-		// TODO
+		// lines clearing & scoring
+		final int linesCleared = board.checkForCompleteLines();
+		if (linesCleared > 0) {
+			score += computeScore(linesCleared);
+			System.out.println(String.format("=> [%d] lines cleared !", linesCleared));
+		}
 
-		// board debug rendering
-		System.out.println(board.toString() + "\n\n\n");
+		// debug info
+		System.out.println(board.toString());
+		System.out.println(String.format("score = %d", score));
+		System.out.println("\n\n\n");
 	}
 	
 	private void moveCurrentTetrimino(final int deltaX, final int deltaY) {
@@ -71,16 +75,30 @@ public class TetrisModel implements ActionListener {
 
 		final int posX = t.getX() + deltaX, posY = t.getY() + deltaY;
 		
-		// check collision with the game corners
+		// check movement & collision for each individual block of the current tetrimino
 		for (int i = 0; i < 4 && !collision; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (!t.getBlock(i, j)) continue;
-				
 				final int x = posX + i, y = posY + j;
-				if (x < 0 || x >= BOARD_WIDTH || y < 0) return; // movement forbidden
-				if (y >= BOARD_HEIGHT) {
+
+				// borders movement check
+				if (x < 0 || x >= TetrisBoard.WIDTH || y < 0) return; // movement forbidden
+
+				// bottom border collision
+				if (y >= TetrisBoard.HEIGHT) {
 					collision = true;
 					break;
+				}
+				
+				// board collision check
+				if (board.getCells()[y][x].present) {
+					// collision...
+					if (deltaY > 0) {
+						collision = true;
+						break;
+					}
+					// ... or movement forbidden ?
+					return;
 				}
 			}
 		}
@@ -103,8 +121,16 @@ public class TetrisModel implements ActionListener {
 		System.out.println(String.format("New tetrimino type = \"%s\"", type));
 		
 		currentTetrimino = new Tetrimino(color, type,
-			random.nextInt(BOARD_WIDTH),
+			random.nextInt(TetrisBoard.WIDTH),
 			0, Tetrimino.getBlocksFromType(type));
+	}
+	
+	private int computeScore(final int linesCleared) {
+		if (linesCleared <= 0) return 0;
+		if (linesCleared == 1) return 100;
+		if (linesCleared == 2) return 300;
+		if (linesCleared == 3) return 700;
+		return 1000;
 	}
 
 	public int getScore() { return score; }
