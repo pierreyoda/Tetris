@@ -7,6 +7,8 @@ import java.util.Random;
 
 import javax.swing.Timer;
 
+import view.TetrisView;
+
 public class TetrisModel implements ActionListener {
 	public static int BOARD_WIDTH = 10;
 	public static int BOARD_HEIGHT = 22;
@@ -20,6 +22,8 @@ public class TetrisModel implements ActionListener {
 	private int score = 0;
 	private Tetrimino currentTetrimino;
 	private ArrayList<Tetrimino> tetriminos = new ArrayList();
+	
+	private TetrisView view = null; // needed to refresh the view after each update
 
 	public TetrisModel() {
 		generateNewTetrimino();
@@ -28,9 +32,21 @@ public class TetrisModel implements ActionListener {
 		timer.start();
 	}
 
+	/**
+	 * Set the TetrisView instance responsible for displaying the game.
+	 *
+	 * Must be called before any update happens.
+	 */
+	public void setView(final TetrisView view) {
+		this.view = view;
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent event) {
+		if (view == null) throw new IllegalStateException("TetrisModel.setView must be called first.");
 		update();
+
+		view.repaint();
 	}
 
 	public void pause() { timer.stop(); }

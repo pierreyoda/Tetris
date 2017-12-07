@@ -10,8 +10,10 @@ public class Main {
 		TetrisController controller = new TetrisController(model);
 		TetrisView view = new TetrisView(model, controller);
 		TetrisWindow window = new TetrisWindow(controller, view);
+		
+		model.setView(view);
 
-		window.setVisible(true);
+		window.setVisible(true); // run the game by displaying its window
 	}
 
 }
