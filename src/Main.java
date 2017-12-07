@@ -12,8 +12,8 @@ public class Main {
 		TetrisWindow window = new TetrisWindow(controller, view);
 		
 		model.setView(view);
-
-		window.setVisible(true); // run the game by displaying its window
+		
+		window.startGame();
 	}
 
 }
