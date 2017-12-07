@@ -54,6 +54,7 @@ public class TetrisView extends JPanel implements KeyListener {
 		case KeyEvent.VK_DOWN:
 		case KeyEvent.VK_KP_DOWN:
 			controller.keyDown();
+			break;
 		case KeyEvent.VK_LEFT:
 		case KeyEvent.VK_KP_LEFT:
 			controller.keyLeft();
@@ -61,6 +62,7 @@ public class TetrisView extends JPanel implements KeyListener {
 		case KeyEvent.VK_RIGHT:
 		case KeyEvent.VK_KP_RIGHT:
 			controller.keyRight();
+			break;
 		}
 	}
 	
