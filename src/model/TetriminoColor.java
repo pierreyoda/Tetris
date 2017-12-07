@@ -15,9 +15,13 @@ public class TetriminoColor {
 	private int blue;
 	
 	public TetriminoColor(final int red, final int green, final int blue) {
-		this.red = red;
-		this.green = green;
-		this.blue = blue;
+		set(red, green, blue);
+	}
+	
+	public TetriminoColor(final TetriminoColor other) {
+		this.red = other.red;
+		this.green = other.green;
+		this.blue = other.blue;
 	}
 	
 	public static TetriminoColor getRandomColor() {
@@ -43,9 +47,38 @@ public class TetriminoColor {
 	public int getGreen() { return green; }
 	public int getBlue() { return blue; }
 	
+	public final void setRed(final int red) {
+		if (!isColorScalarValid(red))
+			throw new IllegalArgumentException("A color value must be between 0 and 255.");
+		this.red = red;
+	}
+
+	public final void setGreen(final int green) {
+		if (!isColorScalarValid(green))
+			throw new IllegalArgumentException("A color value must be between 0 and 255.");
+		this.green = green;
+	}
+
+	public final void setBlue(final int blue) {
+		if (!isColorScalarValid(blue))
+			throw new IllegalArgumentException("A color value must be between 0 and 255.");
+		this.blue = blue;
+	}
+
+	public final void set(final int red, final int green, final int blue) {
+		if (!isColorScalarValid(red) || !isColorScalarValid(green) || !isColorScalarValid(blue))
+			throw new IllegalArgumentException("A color value must be between 0 and 255.");
+		this.red = red;
+		this.green = green;
+		this.blue = blue;
+	}
+	
 	@Override
 	public String toString() {
 		return String.format("RGB (%d, %d, %d)", red, green, blue);
 	}
 	
+	private static boolean isColorScalarValid(final int value) {
+		return 0 <= value && value <= 255;
+	}
 }
