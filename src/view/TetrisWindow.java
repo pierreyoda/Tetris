@@ -11,15 +11,10 @@ public class TetrisWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final static String WINDOW_TITLE = "Tetris - Projet Logiciel";
-	private TetrisController controller;
-	private TetrisView view;
 	
-	public TetrisWindow(final TetrisController controller, final TetrisView view) {
-		this.controller = controller;
-		this.view = view;
-
+	public TetrisWindow(final TetrisView view) {
 		setTitle(WINDOW_TITLE);
-		
+
 		// force application stop when closing the window
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 

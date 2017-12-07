@@ -9,7 +9,7 @@ public class Main {
 		TetrisModel model = new TetrisModel();
 		TetrisController controller = new TetrisController(model);
 		TetrisView view = new TetrisView(model, controller);
-		TetrisWindow window = new TetrisWindow(controller, view);
+		TetrisWindow window = new TetrisWindow(view);
 		
 		model.setView(view);
 		
