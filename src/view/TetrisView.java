@@ -15,7 +15,8 @@ import model.TetrisBoardCell;
 import model.TetrisModel;
 
 public class TetrisView extends JPanel implements KeyListener {
-	
+	private static final long serialVersionUID = 1L;
+
 	private static final Color BACKGROUND_COLOR = Color.BLACK;
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
 	
@@ -76,6 +77,17 @@ public class TetrisView extends JPanel implements KeyListener {
 	private void renderGame(Graphics g) {
 		final int size = TetrisModel.PIECE_SIZE;
 		
+		// render the current tetrimino
+		final Tetrimino t = model.getCurrentTetrimino();
+		g.setColor(t.getColor().toSwing());
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (!t.getBlock(i, j)) continue;
+				g.fillRect((t.getX() + i) * size, (t.getY() + j) * size, size, size);
+			}
+		}
+
+		// render the rest of the blocks
 		final TetrisBoardCell[][] cells = model.getBoardCells();
 		for (int y = 0; y < TetrisModel.BOARD_HEIGHT; y++) {
 			for (int x = 0; x < TetrisModel.BOARD_WIDTH; x++) {

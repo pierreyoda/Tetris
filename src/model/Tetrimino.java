@@ -1,10 +1,8 @@
 package model;
 
-import java.util.Arrays;
-import java.util.Collections;
-
 /**
- * A tetrimino is a geometric shape composed of four squares.
+ * A tetrimino is a geometric shape composed of four squares, able to move and
+ * rotate and with its own color.
  */
 public class Tetrimino {
 	/**
@@ -15,6 +13,8 @@ public class Tetrimino {
 	/**
 	 * The array defining the geometry of the tetrimino. True means that a block is
 	 * present.
+	 * First dimension is the rotation index (0-3), second dimension is X (horizontal axis) and
+	 * third dimension is Y (vertical axis).
 	 */
 	private boolean[][][] blocks = new boolean[4][4][4];
 
@@ -23,11 +23,6 @@ public class Tetrimino {
 	 * vertical ones (descending).
 	 */
 	private int positionX, positionY;
-
-	/**
-	 * Defines the width and height of the tetrimino's shape.
-	 */
-	private int sizeX, sizeY;
 	
 	/**
 	 * The type of the tetrimino.
@@ -47,16 +42,6 @@ public class Tetrimino {
 		this.positionX = positionX;
 		this.positionY = positionY;
 		this.blocks = blocks;
-
-		// Get dimensions
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (blocks[0][i][j]) {
-					sizeX = i + 1;
-					sizeY = j + 1;
-				}
-			}
-		}
 	}
 
 	public static boolean[][][] getBlocksFromType(final TetriminoType type) {
@@ -199,39 +184,16 @@ public class Tetrimino {
 	}
 
 	public void rotate(final boolean right) {
-		if (right) {
-			rotation  = (rotation + 1) % 4;
-		} else {
-			rotation = (rotation - 1) % 4;
-		}
+		rotation = (right ? (rotation + 1) : (rotation - 1)) % 4;
 	}
 
-	public void move(final int deltaX, final int deltaY, final int boardWidth, final int boardHeight) {
-		final int newPositionX = positionX + deltaX, newPositionY = positionY + deltaY;
-		if (newPositionX < 0 || newPositionX >= boardWidth)
-			return;
-		if (newPositionY < 0 || newPositionY >= boardHeight)
-			return;
-		if (newPositionX + sizeX >= boardWidth)
-			return;
-		if (newPositionY + sizeY >= boardHeight)
-			return;
-		// TO IMPROVE (error by 1)
-		positionX = newPositionX;
-		positionY = newPositionY;
+	public void move(final int deltaX, final int deltaY) {
+		positionX = positionX + deltaX;
+		positionY = positionY + deltaY;
 	}
 
-	public int getX() {
-		return positionX;
-	}
-
-	public int getY() {
-		return positionY;
-	}
-
-	public TetriminoColor getColor() {
-		return color;
-	}
+	public int getX() { return positionX; }
+	public int getY() { return positionY; }
 
 	public boolean getBlock(final int x, final int y) {
 		if (x < 0 || x >= 4 || y < 0 || y >= 4)
@@ -239,7 +201,7 @@ public class Tetrimino {
 		return blocks[rotation][x][y];
 	}
 
-	public int getWidth() { return sizeX; }
-	public int getHeight() { return sizeY; }
+	public TetriminoColor getColor() { return color; }
+	public TetriminoType getType() { return type; }
 
 }

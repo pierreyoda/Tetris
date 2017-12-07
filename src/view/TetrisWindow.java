@@ -1,11 +1,6 @@
 package view;
 
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-
 import javax.swing.JFrame;
-
-import control.TetrisController;
 
 public class TetrisWindow extends JFrame {
 	private static final long serialVersionUID = 1L;

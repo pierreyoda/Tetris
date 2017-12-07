@@ -1,10 +1,9 @@
 package model;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * The TetrisBoard class modelizes all the tetrimino blocks present in the game.
+ * The TetrisBoard class modelizes all the static tetrimino blocks present in the game.
+ * 
+ * This excludes the blocks of the currently played tetrimino, which is dynamic.
  */
 public class TetrisBoard {
 	private static final char DEBUG_PRESENT = 'x'; // character representing a visible cell
@@ -24,21 +23,16 @@ public class TetrisBoard {
 		}
 	}
 
-	public void update(List<Tetrimino> tetriminos) {
-		// clear the board (avoiding any new object creation)
-		for (int y = 0; y < TetrisModel.BOARD_HEIGHT; y++) {
-			for (int x = 0; x < TetrisModel.BOARD_WIDTH; x++) {
-				cells[y][x].present = false;
-			}
-		}
-
-		for (final Tetrimino tetrimino : tetriminos) {
-			for (int j = 0; j < 4 && (tetrimino.getY() + j) < TetrisModel.BOARD_HEIGHT; j++) {
-				for (int i = 0; i < 4 && (tetrimino.getX() + i) < TetrisModel.BOARD_WIDTH; i++) {
-					final TetrisBoardCell cell = cells[tetrimino.getY() + j][tetrimino.getX() + i];
-					cell.present = tetrimino.getBlock(i, j);
-					cell.color = tetrimino.getColor();
-				}
+	/**
+	 * Add a new, 'freezed' tetrimino to the board.
+	 */
+	public void addTetrimino(final Tetrimino tetrimino) {
+		for (int j = 0; j < 4 && (tetrimino.getY() + j) < TetrisModel.BOARD_HEIGHT; j++) {
+			for (int i = 0; i < 4 && (tetrimino.getX() + i) < TetrisModel.BOARD_WIDTH; i++) {
+				if (!tetrimino.getBlock(i, j)) continue;
+				final TetrisBoardCell cell = cells[tetrimino.getY() + j][tetrimino.getX() + i];
+				cell.present = true;
+				cell.color = tetrimino.getColor();
 			}
 		}
 	}
