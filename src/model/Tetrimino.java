@@ -239,4 +239,7 @@ public class Tetrimino {
 		return blocks[rotation][x][y];
 	}
 
+	public int getWidth() { return sizeX; }
+	public int getHeight() { return sizeY; }
+
 }

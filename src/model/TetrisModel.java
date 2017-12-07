@@ -15,19 +15,21 @@ public class TetrisModel implements ActionListener {
 	public static int PIECE_SIZE = 35;
 	private static float GAME_SPEED = 1.f;
 
-	private float gameTimer = 0.f;
 	private Timer timer;
 	private Random random = new Random();
 
 	private int score = 0;
 	private Tetrimino currentTetrimino;
-	private ArrayList<Tetrimino> tetriminos = new ArrayList();
+	private final ArrayList<Tetrimino> tetriminos = new ArrayList<Tetrimino>();
+	private final TetrisBoard board = new TetrisBoard();
 	
 	private TetrisView view = null; // needed to refresh the view after each update
 
 	public TetrisModel() {
+		// game initialization
 		generateNewTetrimino();
 
+		// set up a timer to call the actionPerformed method at fixed intervals
 		timer = new Timer((int) (GAME_SPEED * 1000.f), this);
 		timer.start();
 	}
@@ -44,6 +46,7 @@ public class TetrisModel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent event) {
 		if (view == null) throw new IllegalStateException("TetrisModel.setView must be called first.");
+
 		update();
 
 		view.repaint();
@@ -53,10 +56,12 @@ public class TetrisModel implements ActionListener {
 	public void resume() { timer.restart(); }
 
 	public void update() {
-		for (Tetrimino tetrimino : tetriminos) {
-			tetrimino.move(0, +1, BOARD_WIDTH, BOARD_HEIGHT);
-			tetrimino.rotate(true);
-		}
+		// current tetrimino fall
+		currentTetrimino.move(0,  +1, BOARD_WIDTH, BOARD_HEIGHT);
+		
+		// board update
+		board.update(tetriminos);
+		System.out.println(board.toString() + "\n\n\n");
 	}
 
 	private void generateNewTetrimino() {
@@ -73,8 +78,6 @@ public class TetrisModel implements ActionListener {
 
 	public int getScore() { return score; }
 
-	public ArrayList<Tetrimino> getTetriminos() { return tetriminos; }
-
 	public void rotate() {
 		currentTetrimino.rotate(true);
 	}
@@ -90,5 +93,7 @@ public class TetrisModel implements ActionListener {
 	public void right() {
 		currentTetrimino.move(+1, 0, BOARD_WIDTH, BOARD_HEIGHT);
 	}
+
+	public TetrisBoardCell[][] getBoardCells() { return board.getCells(); }
 
 }

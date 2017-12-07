@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import control.TetrisController;
 import model.Tetrimino;
+import model.TetrisBoardCell;
 import model.TetrisModel;
 
 public class TetrisView extends JPanel implements KeyListener {
@@ -39,8 +40,8 @@ public class TetrisView extends JPanel implements KeyListener {
 		g.fillRect(0, 0, TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE,
 				   TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE);
 		
-		displayTetriminos(g);
-		displayHud(g);
+		renderGame(g);
+		renderHud(g);
 	}
 	
 	@Override
@@ -72,23 +73,22 @@ public class TetrisView extends JPanel implements KeyListener {
 	@Override
 	public void keyTyped(final KeyEvent e) { }
 	
-	private void displayTetriminos(Graphics g) {
+	private void renderGame(Graphics g) {
 		final int size = TetrisModel.PIECE_SIZE;
-
-		for (final Tetrimino tetrimino : model.getTetriminos()) {
-			final int posX = tetrimino.getX(), posY = tetrimino.getY();
-			g.setColor(tetrimino.getColor().toSwing());
-			for (int i = 0; i < 4; i++) {
-				for (int j = 0; j < 4; j++) {
-					if (tetrimino.getBlock(i, j)) {
-						g.fillRect((posX + i) * size, (posY + j) * size, size, size);
-					}
-				}
+		
+		final TetrisBoardCell[][] cells = model.getBoardCells();
+		for (int y = 0; y < TetrisModel.BOARD_HEIGHT; y++) {
+			for (int x = 0; x < TetrisModel.BOARD_WIDTH; x++) {
+				final TetrisBoardCell cell = cells[y][x];
+				if (!cell.present) continue;
+				
+				g.setColor(cell.color.toSwing());
+				g.fillRect(x * size, y * size, size, size);
 			}
 		}
 	}
 	
-	private void displayHud(Graphics g) {
+	private void renderHud(Graphics g) {
 		g.setFont(TEXT_FONT);
 		g.setColor(Color.WHITE);
 		g.drawString("Score : " + model.getScore(), 0, 0);

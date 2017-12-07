@@ -3,6 +3,9 @@ package model;
 import java.awt.Color;
 import java.util.Random;
 
+/**
+ * Defines the color of a tetrimino.
+ */
 public class TetriminoColor {
 	
 	private static Random random = new Random();
@@ -39,5 +42,10 @@ public class TetriminoColor {
 	public int getRed() { return red; }
 	public int getGreen() { return green; }
 	public int getBlue() { return blue; }
+	
+	@Override
+	public String toString() {
+		return String.format("RGB (%d, %d, %d)", red, green, blue);
+	}
 	
 }
