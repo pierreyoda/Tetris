@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
@@ -25,9 +26,12 @@ public class TetrisView extends JPanel implements KeyListener {
 		this.controller = controller;
 		
 		setSize(TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE, TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE);
+		setPreferredSize(new Dimension(TetrisModel.BOARD_WIDTH * TetrisModel.PIECE_SIZE, TetrisModel.BOARD_HEIGHT * TetrisModel.PIECE_SIZE));
+
 		setFocusable(true);
-		addKeyListener(this);
 		requestFocusInWindow();
+
+		addKeyListener(this);
 	}
 	
 	public void paint(Graphics g) {

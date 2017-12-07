@@ -1,8 +1,11 @@
 package view;
 
+import java.awt.Dimension;
+
 import javax.swing.JFrame;
 
 import control.TetrisController;
+import model.TetrisModel;
 
 public class TetrisWindow extends JFrame {
 	private final static String WINDOW_TITLE = "Tetris - Projet Logiciel";
