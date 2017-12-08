@@ -47,12 +47,6 @@ public class TetrisModel implements ActionListener {
 			System.exit(1);
 		}
 		System.out.println("Score manager : loaded highscores.");
-		/*scoreManager.submit("B", 1500);
-		scoreManager.submit("A", 1700);
-		scoreManager.submit("C", 300);
-		for (int i = 0; i < 10; i++) {
-			scoreManager.submit("CCC", random.nextInt(1800));
-		}*/
 		System.out.println(scoreManager.toString() + "\n\n");
 		scoreManager.save();
 		System.out.println("Score manager : saved highscores.");
@@ -75,7 +69,7 @@ public class TetrisModel implements ActionListener {
 	}
 
 	/**
-	 * Called every 'GAME
+	 * Called every 'GAME_UPDATE_INTERVAL' milliseconds.
 	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {

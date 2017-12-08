@@ -1,6 +1,7 @@
 package model;
 
 /**
+ * <pre>
  * Enumerates the different possible types of tetrimino :
  * - STICK xxxx
  * - BOX xx
@@ -15,7 +16,7 @@ package model;
  *                xxx
  * - RIGHT L   x
  *           xxx
- *   
+ *  </pre>
  */
 public enum TetriminoType {
 	STICK,
