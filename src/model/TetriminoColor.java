@@ -1,33 +1,32 @@
 package model;
 
-import java.awt.Color;
 import java.util.Random;
 
 /**
  * Defines the color of a tetrimino.
  */
 public class TetriminoColor {
-	
+
 	private static Random random = new Random();
 
 	private int red;
 	private int green;
 	private int blue;
-	
+
 	public TetriminoColor(final int red, final int green, final int blue) {
 		set(red, green, blue);
 	}
-	
+
 	public TetriminoColor(final TetriminoColor other) {
 		this.red = other.red;
 		this.green = other.green;
 		this.blue = other.blue;
 	}
-	
+
 	public static TetriminoColor getRandomColor() {
 		return new TetriminoColor(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
-	
+
 	public static TetriminoColor getRandomThemeColor() {
 		final TetriminoColor[] themeColors = {
 			new TetriminoColor(0, 255, 255),
@@ -40,13 +39,11 @@ public class TetriminoColor {
 		};
 		return themeColors[random.nextInt(themeColors.length)];
 	}
-	
-	public Color toSwing() { return new Color(red, green, blue); }
-	
-	public int getRed() { return red; }
-	public int getGreen() { return green; }
-	public int getBlue() { return blue; }
-	
+
+	public int red() { return red; }
+	public int green() { return green; }
+	public int blue() { return blue; }
+
 	public final void setRed(final int red) {
 		if (!isColorScalarValid(red))
 			throw new IllegalArgumentException("A color value must be between 0 and 255.");
@@ -72,12 +69,12 @@ public class TetriminoColor {
 		this.green = green;
 		this.blue = blue;
 	}
-	
+
 	@Override
 	public String toString() {
 		return String.format("RGB (%d, %d, %d)", red, green, blue);
 	}
-	
+
 	private static boolean isColorScalarValid(final int value) {
 		return 0 <= value && value <= 255;
 	}

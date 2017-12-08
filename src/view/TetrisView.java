@@ -11,6 +11,7 @@ import javax.swing.JPanel;
 
 import control.TetrisController;
 import model.Tetrimino;
+import model.TetriminoColor;
 import model.TetrisBoard;
 import model.TetrisBoardCell;
 import model.TetrisModel;
@@ -70,6 +71,13 @@ public class TetrisView extends JPanel implements KeyListener {
 	}
 
 	/**
+	 * Convert the game's internal color representation to the Swing equivalent.
+	 */
+	public Color colorToSwing(final TetriminoColor color) {
+		return new Color(color.red(), color.green(), color.blue());
+	}
+
+	/**
 	 * Render the game's current state.
 	 * @param g Does the actual drawing of primitives.
 	 */
@@ -92,7 +100,7 @@ public class TetrisView extends JPanel implements KeyListener {
 
 		// render the currently controlled tetrimino
 		final Tetrimino t = controller.getControlledTetrimino();
-		g.setColor(t.getColor().toSwing());
+		g.setColor(colorToSwing(t.getColor()));
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
 				if (!t.getBlock(i, j)) continue;
