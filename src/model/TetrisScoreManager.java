@@ -18,6 +18,9 @@ public class TetrisScoreManager {
 	final private static String SCORE_DELIMITER = "=";
 	final private static int MAX_HIGHSCORES = 10;
 
+	/**
+	 * A Tetris highscore entry.
+	 */
 	public class TetrisHighScore {
 		public final String name;
 		public final int score;
@@ -59,7 +62,7 @@ public class TetrisScoreManager {
 		return false;
 	}
 
-	/** Try and load the highscores from the file system.
+	/** Try to load the highscores from the file system.
 	 * @return True if successful, false otherwise.
 	 */
 	public boolean load() {
@@ -98,7 +101,7 @@ public class TetrisScoreManager {
 		return true;
 	}
 
-	/** Try and save the highscores to the file system.
+	/** Try to save the highscores to the file system.
 	 * @return True if successful, false otherwise.
 	 */
 	public boolean save() {
@@ -128,6 +131,11 @@ public class TetrisScoreManager {
 		return true;
 	}
 
+	/**
+	 * Get the list of highscores.
+	 * NB : the highscore of index 0 is the highest one.
+	 * @return List of highscores.
+	 */
 	public ArrayList<TetrisHighScore> getHighscores() { return highscores; }
 
 	@Override

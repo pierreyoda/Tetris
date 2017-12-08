@@ -9,8 +9,17 @@ import javax.swing.Timer;
 import view.TetrisView;
 
 public class TetrisModel implements ActionListener {
+	/**
+	 * The size of a single tetrimino block, in pixels.
+	 */
 	public static int PIECE_SIZE = 35;
-	private static int GAME_TICK = 750; // update interval, in ms
+
+	/**
+	 * Amount of time between each game state update, in milliseconds.
+	 *
+	 * Must be strictly positive.
+	 */
+	private static int GAME_UPDATE_INTERVAL = 750;
 
 	private Timer timer;
 	private Random random = new Random();
@@ -26,7 +35,10 @@ public class TetrisModel implements ActionListener {
 	public TetrisModel() {
 	}
 
-	public void initGame() {
+	/**
+	 * Initialize the game and start its execution.
+	 */
+	public void startGame() {
 		if (view == null) throw new IllegalStateException("TetrisModel.initGame : TetrisModel.setView must be called first.");
 
 		// score manager initialization
@@ -49,7 +61,7 @@ public class TetrisModel implements ActionListener {
 		generateNewTetrimino();
 
 		// set up a timer to call the actionPerformed method at fixed intervals
-		timer = new Timer(GAME_TICK, this);
+		timer = new Timer(GAME_UPDATE_INTERVAL, this);
 		timer.start();
 	}
 
@@ -62,17 +74,30 @@ public class TetrisModel implements ActionListener {
 		this.view = view;
 	}
 
+	/**
+	 * Called every 'GAME
+	 */
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		update();
+		updateGame();
 
 		view.repaint();
 	}
 
+	/**
+	 * Pause the game.
+	 */
 	public void pause() { timer.stop(); }
-	public void resume() { timer.restart(); }
 
-	public void update() {
+	/**
+	 * Unpause the game.
+	 */
+	public void unpause() { timer.restart(); }
+
+	/**
+	 * Update the game's state by one tick.
+	 */
+	public void updateGame() {
 		// current tetrimino fall
 		moveCurrentTetrimino(0, +1);
 
@@ -89,6 +114,12 @@ public class TetrisModel implements ActionListener {
 		System.out.println("\n\n\n");
 	}
 
+	/**
+	 * Try to move the current tetrimino by the given offset vector.
+	 *
+	 * @param deltaX Offset along the X axis (horizontal).
+	 * @param deltaY Offset along the Y axis (vertical).
+	 */
 	private void moveCurrentTetrimino(final int deltaX, final int deltaY) {
 		boolean collision = false;
 		final Tetrimino t = currentTetrimino;
@@ -135,11 +166,20 @@ public class TetrisModel implements ActionListener {
 		t.move(deltaX, deltaY);
 	}
 
+	/**
+	 * Generate a new, random tetrimino and assign it as the currently controlled one.
+	 */
 	private void generateNewTetrimino() {
 		final TetriminoType type = TetriminoType.values()[random.nextInt(TetriminoType.values().length)];
 		generateNewTetrimino(type);
 	}
 
+	/**
+	 * Generate a new, random tetrimino with the given type and assign it as the
+	 * currently controlled one.
+	 *
+	 * @param type Type of the tetrimino.
+	 */
 	private void generateNewTetrimino(final TetriminoType type) {
 		final TetriminoColor color = TetriminoColor.getRandomThemeColor();
 		currentTetrimino = new Tetrimino(color, type,
@@ -149,6 +189,11 @@ public class TetrisModel implements ActionListener {
 		System.out.println(String.format("New tetrimino type = \"%s\"", type));
 	}
 
+	/**
+	 * Compute the score gained from clearing lines.
+	 * @param linesCleared Number of lines cleared by the player.
+	 * @return Score gained.
+	 */
 	private int computeScore(final int linesCleared) {
 		if (linesCleared <= 0) return 0;
 		if (linesCleared == 1) return 100;
@@ -157,26 +202,67 @@ public class TetrisModel implements ActionListener {
 		return 1000;
 	}
 
+	/**
+	 * Get the player's current score.
+	 * @return Current score.
+	 */
 	public int getScore() { return score; }
 
+	/**
+	 * Rotate the player's tetrimino.
+	 */
 	public void rotate() {
 		// TODO : add collision check (with border and blocks)
 		currentTetrimino.rotate(true);
 	}
 
+	/**
+	 * Accelerate the fall of the player's tetrimino.
+	 */
 	public void speedUpFall() {
 		moveCurrentTetrimino(0, +1);
 	}
 
+	/**
+	 * Move the player's tetrimino to the left if possible.
+	 */
 	public void left() {
 		moveCurrentTetrimino(-1, 0);
 	}
 
+	/**
+	 * Move the player's tetrimino to the right if possible.
+	 */
 	public void right() {
 		moveCurrentTetrimino(+1, 0);
 	}
 
-	public Tetrimino getCurrentTetrimino() { return currentTetrimino; }
+	/**
+	 * Get the tetrimino currently controlled by the player.
+	 * @return
+	 */
+	public Tetrimino getControlledTetrimino() { return currentTetrimino; }
+
+	/**
+	 * <pre>
+	 * Get the two-dimensional array describing the board's cells.
+	 * NB : the array's first dimension is the Y axis (vertical), and its second
+	 * one is the X axis (horizontal).
+	 * The coordinate system works as follows :
+	 *
+	 * +---------> X
+	 * |
+	 * |
+	 * |
+	 * |
+	 * v
+	 *
+	 * Y
+	 *
+	 * </pre>
+	 *
+	 * @return Cells of the board.
+	 */
 	public TetrisBoardCell[][] getBoardCells() { return board.getCells(); }
 
 }

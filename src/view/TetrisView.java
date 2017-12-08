@@ -15,13 +15,31 @@ import model.TetrisBoard;
 import model.TetrisBoardCell;
 import model.TetrisModel;
 
+/**
+ * The Tetris game view.
+ * Its purpose is to display the state of a 'TetrisModel' instance.
+ *
+ * In addition, it also displays a HUD (Head Up Display) offering information
+ * to the player : score, current level, next tetrimino...
+ */
 public class TetrisView extends JPanel implements KeyListener {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Color of the game view's background.
+	 */
 	private static final Color BACKGROUND_COLOR = Color.BLACK;
+
+	/**
+	 * Color of the border around the game board.
+	 */
 	private static final Color BORDER_COLOR = Color.GREEN;
+
+	/**
+	 * Text font used to render the HUD.
+	 */
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
-	
+
 	private TetrisModel model;
 	private TetrisController controller;
 
@@ -35,18 +53,82 @@ public class TetrisView extends JPanel implements KeyListener {
 		setFocusable(true);
 		requestFocusInWindow();
 
+		// listen for key events
 		addKeyListener(this);
 	}
-	
+
+	/**
+	 * Called by Swing to render the view's graphics.
+	 */
+	@Override
 	public void paint(Graphics g) {
+		// background
 		g.setColor(BACKGROUND_COLOR);
 		g.fillRect(0, 0, (TetrisBoard.WIDTH + 2) * TetrisModel.PIECE_SIZE,
 				   (TetrisBoard.HEIGHT + 2) * TetrisModel.PIECE_SIZE);
-		
+
 		renderGame(g);
 		renderHud(g);
 	}
-	
+
+	/**
+	 * Render the game's current state.
+	 * @param g Does the actual drawing of primitives.
+	 */
+	private void renderGame(Graphics g) {
+		final int size = TetrisModel.PIECE_SIZE;
+
+		// render the game border
+		g.setColor(BORDER_COLOR);
+		for (int x = 0; x < TetrisBoard.WIDTH + 2; x++) {
+			g.fillRect(x * size, 0, size, size);                               // top
+			g.fillRect(x * size, (TetrisBoard.HEIGHT + 1) * size, size, size); // bottom
+		}
+		for (int y = 1; y < TetrisBoard.HEIGHT + 1; y++) {
+			g.fillRect(0, y * size, size, size);                               // left
+			g.fillRect((TetrisBoard.WIDTH + 1) * size, y * size, size, size);  // right
+		}
+
+		// move the origin to the actual gameplay area
+		g.translate(size, size);
+
+		// render the currently controlled tetrimino
+		final Tetrimino t = model.getControlledTetrimino();
+		g.setColor(t.getColor().toSwing());
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (!t.getBlock(i, j)) continue;
+				g.fillRect((t.getX() + i) * size, (t.getY() + j) * size, size, size);
+			}
+		}
+
+		// render the rest of the blocks
+		final TetrisBoardCell[][] cells = model.getBoardCells();
+		for (int y = 0; y < TetrisBoard.HEIGHT; y++) {
+			for (int x = 0; x < TetrisBoard.WIDTH; x++) {
+				final TetrisBoardCell cell = cells[y][x];
+				if (!cell.present) continue;
+
+				//g.setColor(cell.color.toSwing());
+				g.setColor(Color.RED);
+				g.fillRect(x * size, y * size, size, size);
+			}
+		}
+	}
+
+	/**
+	 * Render the game's Head-Up Display.
+	 * @param g Does the actual drawing of primitives.
+	 */
+	private void renderHud(Graphics g) {
+		g.setFont(TEXT_FONT);
+		g.setColor(Color.WHITE);
+		g.drawString("Score : " + model.getScore(), 0, 0);
+	}
+
+	/**
+	 * Called whenever a key is pressed.
+	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		final int keyCode = e.getKeyCode();
@@ -69,57 +151,11 @@ public class TetrisView extends JPanel implements KeyListener {
 			break;
 		}
 	}
-	
+
 	@Override
 	public void keyReleased(final KeyEvent e) { }
-	
+
 	@Override
 	public void keyTyped(final KeyEvent e) { }
-	
-	private void renderGame(Graphics g) {
-		final int size = TetrisModel.PIECE_SIZE;
-
-		// render the game border
-		g.setColor(BORDER_COLOR);
-		for (int x = 0; x < TetrisBoard.WIDTH + 2; x++) {
-			g.fillRect(x * size, 0, size, size);
-			g.fillRect(x * size, (TetrisBoard.HEIGHT + 1) * size, size, size);
-		}
-		for (int y = 1; y < TetrisBoard.HEIGHT + 1; y++) {
-			g.fillRect(0, y * size, size, size);
-			g.fillRect((TetrisBoard.WIDTH + 1) * size, y * size, size, size);
-		}
-		
-		g.translate(size, size);
-		
-		// render the current tetrimino
-		final Tetrimino t = model.getCurrentTetrimino();
-		g.setColor(t.getColor().toSwing());
-		for (int i = 0; i < 4; i++) {
-			for (int j = 0; j < 4; j++) {
-				if (!t.getBlock(i, j)) continue;
-				g.fillRect((t.getX() + i) * size, (t.getY() + j) * size, size, size);
-			}
-		}
-
-		// render the rest of the blocks
-		final TetrisBoardCell[][] cells = model.getBoardCells();
-		for (int y = 0; y < TetrisBoard.HEIGHT; y++) {
-			for (int x = 0; x < TetrisBoard.WIDTH; x++) {
-				final TetrisBoardCell cell = cells[y][x];
-				if (!cell.present) continue;
-				
-				//g.setColor(cell.color.toSwing());
-				g.setColor(Color.RED);
-				g.fillRect(x * size, y * size, size, size);
-			}
-		}
-	}
-	
-	private void renderHud(Graphics g) {
-		g.setFont(TEXT_FONT);
-		g.setColor(Color.WHITE);
-		g.drawString("Score : " + model.getScore(), 0, 0);
-	}
 
 }

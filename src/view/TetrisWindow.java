@@ -2,11 +2,14 @@ package view;
 
 import javax.swing.JFrame;
 
+/**
+ * The game's window.
+ */
 public class TetrisWindow extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private final static String WINDOW_TITLE = "Tetris - Projet Logiciel";
-	
+
 	public TetrisWindow(final TetrisView view) {
 		setTitle(WINDOW_TITLE);
 
@@ -17,7 +20,10 @@ public class TetrisWindow extends JFrame {
 		pack();
 	}
 
-	public void startGame() {
+	/**
+	 * Display the game's window.
+	 */
+	public void displayGame() {
 		setVisible(true);
 	}
 }

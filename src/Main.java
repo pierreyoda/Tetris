@@ -12,8 +12,8 @@ public class Main {
 		TetrisWindow window = new TetrisWindow(view);
 
 		model.setView(view);
-		model.initGame();
-		window.startGame();
+		model.startGame();
+		window.displayGame();
 	}
 
 }
