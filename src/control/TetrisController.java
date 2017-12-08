@@ -1,10 +1,12 @@
 package control;
 
+import model.Tetrimino;
+import model.TetrisBoardCell;
 import model.TetrisModel;
 
 public class TetrisController {
 	private TetrisModel model;
-		
+
 	public TetrisController(final TetrisModel model) {
 		this.model = model;
 	}
@@ -36,5 +38,9 @@ public class TetrisController {
 	public void keyRight() {
 		model.right();
 	}
+
+	public int getScore() { return model.getScore(); }
+	public Tetrimino getControlledTetrimino() { return model.getControlledTetrimino(); }
+	public TetrisBoardCell[][] getBoardCells() { return model.getBoardCells(); }
 
 }

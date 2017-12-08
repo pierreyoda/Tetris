@@ -8,7 +8,7 @@ public class Main {
 	public static void main(String[] args) {
 		TetrisModel model = new TetrisModel();
 		TetrisController controller = new TetrisController(model);
-		TetrisView view = new TetrisView(model, controller);
+		TetrisView view = new TetrisView(controller);
 		TetrisWindow window = new TetrisWindow(view);
 
 		model.setView(view);

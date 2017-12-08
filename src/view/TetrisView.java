@@ -40,11 +40,9 @@ public class TetrisView extends JPanel implements KeyListener {
 	 */
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
 
-	private TetrisModel model;
 	private TetrisController controller;
 
-	public TetrisView(final TetrisModel model, final TetrisController controller) {
-		this.model = model;
+	public TetrisView(final TetrisController controller) {
 		this.controller = controller;
 
 		setPreferredSize(new Dimension((TetrisBoard.WIDTH + 2) * TetrisModel.PIECE_SIZE,
@@ -93,7 +91,7 @@ public class TetrisView extends JPanel implements KeyListener {
 		g.translate(size, size);
 
 		// render the currently controlled tetrimino
-		final Tetrimino t = model.getControlledTetrimino();
+		final Tetrimino t = controller.getControlledTetrimino();
 		g.setColor(t.getColor().toSwing());
 		for (int i = 0; i < 4; i++) {
 			for (int j = 0; j < 4; j++) {
@@ -103,7 +101,7 @@ public class TetrisView extends JPanel implements KeyListener {
 		}
 
 		// render the rest of the blocks
-		final TetrisBoardCell[][] cells = model.getBoardCells();
+		final TetrisBoardCell[][] cells = controller.getBoardCells();
 		for (int y = 0; y < TetrisBoard.HEIGHT; y++) {
 			for (int x = 0; x < TetrisBoard.WIDTH; x++) {
 				final TetrisBoardCell cell = cells[y][x];
@@ -123,7 +121,7 @@ public class TetrisView extends JPanel implements KeyListener {
 	private void renderHud(Graphics g) {
 		g.setFont(TEXT_FONT);
 		g.setColor(Color.WHITE);
-		g.drawString("Score : " + model.getScore(), 0, 0);
+		g.drawString("Score : " + controller.getScore(), 0, 0);
 	}
 
 	/**
