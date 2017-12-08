@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * from and to the game's folder.
  */
 public class TetrisScoreManager {
-	final private static String SCORES_FILEPATH = "/scores.txt";
+	final private static String SCORES_FILEPATH = "scores.txt";
 	final private static String SCORE_DELIMITER = "=";
 	final private static int MAX_HIGHSCORES = 10;
 
@@ -76,9 +76,13 @@ public class TetrisScoreManager {
 					 System.out.format("Score manager : invalid highscore \"%s\".\n", line);
 					 continue;
 				 }
+
+				 final String name = strings[0].trim();
 				 final String scoreString = strings[1].trim();
+				 if (name.isEmpty()) continue;
+
 				 final int score = Integer.parseUnsignedInt(scoreString);
-				 highscores.set(i++, new TetrisHighScore(strings[1], score));
+				 highscores.set(i++, new TetrisHighScore(name, score));
 			}
 
 			bufferedReader.close();
@@ -106,10 +110,8 @@ public class TetrisScoreManager {
 
 			for (int i = 0; i < MAX_HIGHSCORES; i++) {
 				final TetrisHighScore highscore = highscores.get(i);
-				stream.println(String.format("%s %s %d\n",
-											 highscore.name,
-											 SCORE_DELIMITER,
-											 highscore.score));
+				stream.format("%s %s %d\r\n",
+							  highscore.name, SCORE_DELIMITER, highscore.score);
 			}
 
 			stream.flush();
@@ -133,13 +135,18 @@ public class TetrisScoreManager {
 		final StringBuilder builder = new StringBuilder();
 
 		builder.append("===== HIGH SCORES =====\n");
+
+		int count = 0;
 		for (int i = 0; i < MAX_HIGHSCORES; i++) {
 			final TetrisHighScore highscore = highscores.get(i);
+			if (highscore.name.isEmpty() || highscore.score < 0) continue;
 			builder.append(String.format("\"%s\" %s %d\n",
 										 highscore.name,
 										 SCORE_DELIMITER,
 										 highscore.score));
+			++count;
 		}
+		if (count == 0) builder.append("No high scores.\n");
 
 		return builder.toString();
 	}

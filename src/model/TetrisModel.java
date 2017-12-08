@@ -80,12 +80,12 @@ public class TetrisModel implements ActionListener {
 		final int linesCleared = board.checkForCompleteLines();
 		if (linesCleared > 0) {
 			score += computeScore(linesCleared);
-			System.out.println(String.format("=> [%d] lines cleared !", linesCleared));
+			System.out.format("=> [%d] lines cleared !\n", linesCleared);
 		}
 
 		// debug info
 		System.out.println(board.toString());
-		System.out.println(String.format("score = %d", score));
+		System.out.format("score = %d\n", score);
 		System.out.println("\n\n\n");
 	}
 
@@ -127,7 +127,7 @@ public class TetrisModel implements ActionListener {
 		if (collision) {
 			board.addTetrimino(t);
 			generateNewTetrimino();
-			System.out.println(String.format("collision (x = %d, y = %d) !", t.getX(), t.getY()));
+			System.out.format("collision (x = %d, y = %d) !\n", t.getX(), t.getY());
 			return;
 		}
 
