@@ -39,7 +39,11 @@ public class TetrisModel implements ActionListener {
 	 * Initialize the game and start its execution.
 	 */
 	public void startGame() {
-		if (view == null) throw new IllegalStateException("TetrisModel.initGame : TetrisModel.setView must be called first.");
+		// sanity checks
+		if (view == null)
+			throw new IllegalStateException("TetrisModel.initGame : TetrisModel.setView must be called first.");
+		if (GAME_UPDATE_INTERVAL <= 0)
+			throw new IllegalStateException("TetrisModel.initGame : GAME_UPDATE_INTERVAL must be > 0.");
 
 		// score manager initialization
 		if (!scoreManager.load()) {
