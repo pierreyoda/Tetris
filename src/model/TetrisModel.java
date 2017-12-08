@@ -61,6 +61,16 @@ public class TetrisModel implements ActionListener {
 		// set up a timer to call the actionPerformed method at fixed intervals
 		timer = new Timer(GAME_UPDATE_INTERVAL, this);
 		timer.start();
+
+		// quickstart for test games
+		if (true) {
+			for (int y = TetrisBoard.HEIGHT - 5; y < TetrisBoard.HEIGHT; y++) {
+				for (int x = 0; x + 1 < TetrisBoard.WIDTH && x < y / 3; x++) {
+					board.getCells()[y][x].present = true;
+					board.getCells()[y][x].color = TetriminoColor.getColorFromType(TetriminoType.STICK);
+				}
+			}
+		}
 	}
 
 	/**
@@ -179,7 +189,7 @@ public class TetrisModel implements ActionListener {
 	 * @param type Type of the tetrimino.
 	 */
 	private void generateNewTetrimino(final TetriminoType type) {
-		final TetriminoColor color = TetriminoColor.getRandomThemeColor();
+		final TetriminoColor color = TetriminoColor.getColorFromType(type);
 		currentTetrimino = new Tetrimino(color, type,
 			random.nextInt(TetrisBoard.WIDTH),
 			0, Tetrimino.getBlocksFromType(type));

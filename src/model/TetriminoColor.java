@@ -23,21 +23,27 @@ public class TetriminoColor {
 		this.blue = other.blue;
 	}
 
+	/**
+	 * Get a completely random color.
+	 */
 	public static TetriminoColor getRandomColor() {
 		return new TetriminoColor(random.nextInt(256), random.nextInt(256), random.nextInt(256));
 	}
 
-	public static TetriminoColor getRandomThemeColor() {
-		final TetriminoColor[] themeColors = {
-			new TetriminoColor(0, 255, 255),
-			new TetriminoColor(0, 0, 255),
-			new TetriminoColor(0, 170, 170),
-			new TetriminoColor(100, 65, 0),
-			new TetriminoColor(0, 67, 0),
-			new TetriminoColor(67, 33, 0),
-			new TetriminoColor(67, 67, 0),
+	/**
+	 * Get the color corresponding to a tetrimino type.
+	 */
+	public static TetriminoColor getColorFromType(final TetriminoType type) {
+		final TetriminoColor[] palette = {
+			new TetriminoColor(20, 255, 255), // stick
+			new TetriminoColor(240, 240, 20), // box
+			new TetriminoColor(130, 30, 130), // stairs
+			new TetriminoColor(40, 255, 40), // right snake
+			new TetriminoColor(0, 67, 0), // left snake
+			new TetriminoColor(40, 50, 255), // left L
+			new TetriminoColor(255, 160, 20), // right L
 		};
-		return themeColors[random.nextInt(themeColors.length)];
+		return palette[type.ordinal()];
 	}
 
 	public int red() { return red; }

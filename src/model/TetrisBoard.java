@@ -114,6 +114,26 @@ public class TetrisBoard {
 		return builder.toString();
 	}
 
+	/**
+	 * <pre>
+	 * Get the two-dimensional array describing the board's cells.
+	 * NB : the array's first dimension is the Y axis (vertical), and its second
+	 * one is the X axis (horizontal).
+	 * The coordinate system works as follows :
+	 *
+	 * +---------> X
+	 * |
+	 * |
+	 * |
+	 * |
+	 * v
+	 *
+	 * Y
+	 *
+	 * </pre>
+	 *
+	 * @return Cells of the board.
+	 */
 	public TetrisBoardCell[][] getCells() { return cells; }
 
 }

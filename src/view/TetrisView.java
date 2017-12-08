@@ -41,6 +41,11 @@ public class TetrisView extends JPanel implements KeyListener {
 	 */
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
 
+	/**
+	 * If true, debug mode will be activated (for test purposes).
+	 */
+	private boolean debugMode = false;
+
 	private TetrisController controller;
 
 	public TetrisView(final TetrisController controller) {
@@ -115,8 +120,11 @@ public class TetrisView extends JPanel implements KeyListener {
 				final TetrisBoardCell cell = cells[y][x];
 				if (!cell.present) continue;
 
-				//g.setColor(cell.color.toSwing());
-				g.setColor(Color.RED);
+				if (debugMode) {
+					g.setColor(Color.RED);
+				} else {
+					g.setColor(colorToSwing(cell.color));
+				}
 				g.fillRect(x * size, y * size, size, size);
 			}
 		}
@@ -139,6 +147,9 @@ public class TetrisView extends JPanel implements KeyListener {
 	public void keyPressed(final KeyEvent e) {
 		final int keyCode = e.getKeyCode();
 		switch (keyCode) {
+		case KeyEvent.VK_F1:
+			debugMode = !debugMode;
+			break;
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_KP_UP:
 			controller.keyUp();
