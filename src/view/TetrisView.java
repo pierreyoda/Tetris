@@ -19,6 +19,7 @@ public class TetrisView extends JPanel implements KeyListener {
 	private static final long serialVersionUID = 1L;
 
 	private static final Color BACKGROUND_COLOR = Color.BLACK;
+	private static final Color BORDER_COLOR = Color.GREEN;
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
 	
 	private TetrisModel model;
@@ -27,9 +28,9 @@ public class TetrisView extends JPanel implements KeyListener {
 	public TetrisView(final TetrisModel model, final TetrisController controller) {
 		this.model = model;
 		this.controller = controller;
-		
-		setSize(TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE, TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE);
-		setPreferredSize(new Dimension(TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE, TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE));
+
+		setPreferredSize(new Dimension((TetrisBoard.WIDTH + 2) * TetrisModel.PIECE_SIZE,
+							           (TetrisBoard.HEIGHT + 2) * TetrisModel.PIECE_SIZE));
 
 		setFocusable(true);
 		requestFocusInWindow();
@@ -39,8 +40,8 @@ public class TetrisView extends JPanel implements KeyListener {
 	
 	public void paint(Graphics g) {
 		g.setColor(BACKGROUND_COLOR);
-		g.fillRect(0, 0, TetrisBoard.WIDTH * TetrisModel.PIECE_SIZE,
-				   TetrisBoard.HEIGHT * TetrisModel.PIECE_SIZE);
+		g.fillRect(0, 0, (TetrisBoard.WIDTH + 2) * TetrisModel.PIECE_SIZE,
+				   (TetrisBoard.HEIGHT + 2) * TetrisModel.PIECE_SIZE);
 		
 		renderGame(g);
 		renderHud(g);
@@ -77,6 +78,19 @@ public class TetrisView extends JPanel implements KeyListener {
 	
 	private void renderGame(Graphics g) {
 		final int size = TetrisModel.PIECE_SIZE;
+
+		// render the game border
+		g.setColor(BORDER_COLOR);
+		for (int x = 0; x < TetrisBoard.WIDTH + 2; x++) {
+			g.fillRect(x * size, 0, size, size);
+			g.fillRect(x * size, (TetrisBoard.HEIGHT + 1) * size, size, size);
+		}
+		for (int y = 1; y < TetrisBoard.HEIGHT + 1; y++) {
+			g.fillRect(0, y * size, size, size);
+			g.fillRect((TetrisBoard.WIDTH + 1) * size, y * size, size, size);
+		}
+		
+		g.translate(size, size);
 		
 		// render the current tetrimino
 		final Tetrimino t = model.getCurrentTetrimino();
@@ -95,7 +109,8 @@ public class TetrisView extends JPanel implements KeyListener {
 				final TetrisBoardCell cell = cells[y][x];
 				if (!cell.present) continue;
 				
-				g.setColor(cell.color.toSwing());
+				//g.setColor(cell.color.toSwing());
+				g.setColor(Color.RED);
 				g.fillRect(x * size, y * size, size, size);
 			}
 		}
