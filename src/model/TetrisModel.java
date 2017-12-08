@@ -10,7 +10,7 @@ import view.TetrisView;
 
 public class TetrisModel implements ActionListener {
 	public static int PIECE_SIZE = 35;
-	private static int GAME_TICK = 250; // update interval, in ms
+	private static int GAME_TICK = 750; // update interval, in ms
 
 	private Timer timer;
 	private Random random = new Random();
@@ -24,7 +24,17 @@ public class TetrisModel implements ActionListener {
 
 	public TetrisModel() {
 		// game initialization
-		generateNewTetrimino();
+		generateNewTetrimino(TetriminoType.STICK);
+		//generateNewTetrimino();
+
+		// line clearing test
+		for (int x = 0; x < TetrisBoard.WIDTH - 1; x++) {
+			board.getCells()[TetrisBoard.HEIGHT - 1][x].present = true;
+			board.getCells()[TetrisBoard.HEIGHT - 1][x].color.set(255, 0, 0);
+			board.getCells()[TetrisBoard.HEIGHT - 2][x].present = true;
+			board.getCells()[TetrisBoard.HEIGHT - 2][x].color.set(255, 0, 0);
+		}
+		board.getCells()[TetrisBoard.HEIGHT - 2][0].present = false;
 
 		// set up a timer to call the actionPerformed method at fixed intervals
 		timer = new Timer(GAME_TICK, this);
@@ -107,7 +117,7 @@ public class TetrisModel implements ActionListener {
 		if (collision) {
 			board.addTetrimino(t);
 			generateNewTetrimino();
-			System.out.println(String.format("collision with bottom (x = %d) !", t.getX()));
+			System.out.println(String.format("collision (x = %d, y = %d) !", t.getX(), t.getY()));
 			return;
 		}
 		
@@ -116,13 +126,17 @@ public class TetrisModel implements ActionListener {
 	}
 
 	private void generateNewTetrimino() {
-		final TetriminoColor color = TetriminoColor.getRandomThemeColor();
 		final TetriminoType type = TetriminoType.values()[random.nextInt(TetriminoType.values().length)];
-		System.out.println(String.format("New tetrimino type = \"%s\"", type));
-		
+		generateNewTetrimino(type);
+	}
+	
+	private void generateNewTetrimino(final TetriminoType type) {
+		final TetriminoColor color = TetriminoColor.getRandomThemeColor();
 		currentTetrimino = new Tetrimino(color, type,
 			random.nextInt(TetrisBoard.WIDTH),
 			0, Tetrimino.getBlocksFromType(type));
+
+		System.out.println(String.format("New tetrimino type = \"%s\"", type));
 	}
 	
 	private int computeScore(final int linesCleared) {

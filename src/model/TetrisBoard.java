@@ -67,7 +67,29 @@ public class TetrisBoard {
 	}
 	
 	private void clearLine(final int lineY) {
-		// TODO
+		// clear the line
+		for (int x = 0; x < WIDTH; x++) {
+			final TetrisBoardCell cell = cells[lineY][x];
+			cell.present = false;
+			cell.color.set(0, 0, 0);
+		}
+
+		// move the upper lines' blocks downwards
+		for (int y = lineY - 1; y >= 0; y--) {
+			for (int x = 0; x < WIDTH; x++) {
+				final TetrisBoardCell cell = cells[y][x];
+				if (!cell.present) continue;
+
+				// save block info & clear
+				final TetriminoColor color = new TetriminoColor(cell.color); // copy
+				cell.present = false;
+
+				// move downwards
+				final TetrisBoardCell newCell = cells[y + 1][x];
+				newCell.present = true;
+				newCell.color = color;
+			}
+		}
 	}
 	
 	/**
