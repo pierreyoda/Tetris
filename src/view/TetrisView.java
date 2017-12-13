@@ -80,6 +80,9 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		screens.add(currentScreen);
 
 		currentScreen.init(this);
+		if (!currentScreen.hasContainer())
+			throw new IllegalStateException(
+				"TetrisView.setNewScreen : the given Screen has not set its container properly in its init method.");
 
 		final int delay = currentScreen.updateRate();
 		timer.setInitialDelay(delay);

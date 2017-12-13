@@ -31,6 +31,7 @@ public abstract class Screen {
 	}
 
 	protected ScreenContainer container() { return container; }
+	public boolean hasContainer() { return container != null; }
 
 	/**
 	 * Initialize the Screen's state.
