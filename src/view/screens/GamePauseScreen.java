@@ -4,9 +4,13 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 public class GamePauseScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50;
+
+	private static final Color TEXT_COLOR = Color.WHITE;
 
 	/**
 	 * If true, exit the current screen and resume the game.
@@ -38,11 +42,26 @@ public class GamePauseScreen extends Screen {
 	public void render(final Graphics g, final Font textFont) {
 		if (!firstRender) return;
 
-		// TODO
+		g.setColor(TEXT_COLOR);
+		g.setFont(textFont);
+
+		final int w = container().containerWidth(), h = container().containerHeight();
+
+		drawCenteredText(g, textFont, w / 2, h / 2, "PAUSED");
+		drawCenteredText(g, textFont, w / 2, (int)(h / 1.7), "SPACE OR ENTER TO RESUME");
+		drawCenteredText(g, textFont, w / 2, (int)(h / 1.3), "ESCAPE TO QUIT");
 
 		firstRender = false;
 	}
 
+	private void drawCenteredText(final Graphics g, final Font font,
+								  final int x, final int y,
+								  final String text) {
+		final FontRenderContext context = new FontRenderContext(null, true, true);
+		final Rectangle2D rect = font.getStringBounds(text, context);
+	    final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
+	    g.drawString(text, posX, posY);
+	}
 
 	@Override
 	public void keyPressed(final KeyEvent e) {

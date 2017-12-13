@@ -18,4 +18,14 @@ public interface ScreenContainer {
 	 */
 	public void requestExit();
 
+	/**
+	 * Get the target display's width.
+	 */
+	public int containerWidth();
+
+	/**
+	 * Get the target display's height.
+	 */
+	public int containerHeight();
+
 }

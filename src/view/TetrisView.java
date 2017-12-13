@@ -76,6 +76,11 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		System.exit(0);
 	}
 
+	@Override
+	public int containerWidth() { return getWidth(); }
+	@Override
+	public int containerHeight() { return getHeight(); }
+
 	/**
 	 * Set the given Screen as the current one.
 	 *

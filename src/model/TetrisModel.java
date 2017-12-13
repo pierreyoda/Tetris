@@ -55,8 +55,8 @@ public class TetrisModel {
 
 		// quickstart for test games
 		if (true) {
-			for (int y = TetrisBoard.HEIGHT / 4; y < TetrisBoard.HEIGHT; y++) {
-				for (int x = 0; x + 1 < TetrisBoard.WIDTH; x++) {
+			for (int y = TetrisBoard.HEIGHT / 2; y < TetrisBoard.HEIGHT; y++) {
+				for (int x = 0; x + 1 < TetrisBoard.WIDTH && x < y / 3; x++) {
 					board.getCells()[y][x].present = true;
 					board.getCells()[y][x].color = TetriminoColor.getColorFromType(TetriminoType.STICK);
 				}
