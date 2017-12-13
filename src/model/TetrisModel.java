@@ -217,7 +217,7 @@ public class TetrisModel {
 		if (linesCleared == 1) return 100;
 		if (linesCleared == 2) return 300;
 		if (linesCleared == 3) return 700;
-		return 1000;
+		return 1000 * (linesCleared - 3);
 	}
 
 	/**
