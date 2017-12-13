@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
+import java.awt.font.FontRenderContext;
+import java.awt.geom.Rectangle2D;
 
 import control.TetrisController;
 
@@ -52,15 +54,20 @@ public class MainMenuScreen extends Screen {
 	public void render(Graphics g, Font textFont) {
 		g.setFont(textFont);
 		for (int i = 0; i < BUTTONS_COUNT; i++) {
-			drawButton(g, i);
+			drawButton(g, textFont, i);
 		}
 	}
 
-	private void drawButton(final Graphics g, final int index) {
+	private void drawButton(final Graphics g, final Font font, final int index) {
+		final int w = container().containerWidth(), h = container().containerHeight();
 		final String text = BUTTONS_TEXT[index];
 
+		final FontRenderContext context = new FontRenderContext(null, true, true);
+		final Rectangle2D rect = font.getStringBounds(text, context);
+	    final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
+
 		g.setColor(index == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
-		g.drawString(text, 0, 100 + 100 * index);
+		g.drawString(text, posX, posY);
 	}
 
 	@Override
