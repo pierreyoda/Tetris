@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 
 /**
  * A Screen instance is a self-contained state of the application that is
- * updated, drawn and passed events to from a TetrisView container.
+ * updated, drawn and passed events to from a ScreenContainer container.
  */
 public abstract class Screen {
 	/**
@@ -29,6 +29,8 @@ public abstract class Screen {
 		this.updateRate = updateRate;
 		this.backgroundColor = backgroundColor;
 	}
+
+	protected ScreenContainer container() { return container; }
 
 	/**
 	 * Initialize the Screen's state.
@@ -61,7 +63,5 @@ public abstract class Screen {
 
 	public int updateRate() { return updateRate; }
 	public Color backgroundColor() { return backgroundColor; }
-
-	protected ScreenContainer container() { return container; }
 
 }

@@ -27,6 +27,15 @@ public class TetrisModel {
 	private Tetrimino currentTetrimino;
 	private final TetrisBoard board = new TetrisBoard();
 
+	public TetrisModel() {
+		// score manager initialization
+		if (!scoreManager.load()) {
+			System.out.println("Score manager : failed to load the highscores.");
+			System.exit(1);
+		}
+		System.out.println("Score manager : loaded highscores.");
+	}
+
 	/**
 	 * Initialize the game and start its execution.
 	 */
@@ -34,16 +43,6 @@ public class TetrisModel {
 		// sanity check
 		if (GAME_UPDATE_INTERVAL <= 0)
 			throw new IllegalStateException("TetrisModel.initGame : GAME_UPDATE_INTERVAL must be > 0.");
-
-		// score manager initialization
-		if (!scoreManager.load()) {
-			System.out.println("Score manager : failed to load the highscores.");
-			System.exit(1);
-		}
-		System.out.println("Score manager : loaded highscores.");
-		System.out.println(scoreManager.toString() + "\n\n");
-		scoreManager.save();
-		System.out.println("Score manager : saved highscores.");
 
 		// spawn a new tetrimino for the player to control
 		generateNewTetrimino();
