@@ -97,6 +97,19 @@ public class TetrisBoard {
 	}
 
 	/**
+	 * Completely clear the board from any existing cell.
+	 */
+	public void clear() {
+		for (int y = 0; y < HEIGHT; y++) {
+			for (int x = 0; x < WIDTH; x++) {
+				final TetrisBoardCell cell = cells[y][x];
+				cell.present = false;
+				cell.color.set(0, 0, 0);
+			}
+		}
+	}
+
+	/**
 	 * Returns a string representation of the board. Useful for debugging.
 	 */
 	@Override

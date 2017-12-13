@@ -44,6 +44,12 @@ public class TetrisModel {
 		if (GAME_UPDATE_INTERVAL <= 0)
 			throw new IllegalStateException("TetrisModel.initGame : GAME_UPDATE_INTERVAL must be > 0.");
 
+		// clean up (for game restarts)
+		score = 0;
+		gameOver = false;
+		board.clear();
+		currentTetrimino = null;
+
 		// spawn a new tetrimino for the player to control
 		generateNewTetrimino();
 
