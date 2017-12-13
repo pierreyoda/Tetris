@@ -59,8 +59,8 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 	/**
 	 * Add a Screen to the stack, initialize it and set it as the current one.
 	 *
-	 * The actual operation will be done on the next update tick, to allow the
-	 * current Screen to properly terminate if needed.
+	 * The actual operation will be done after the current Screen's update
+	 * function returned, to allow this Screen to properly terminate if needed.
 	 */
 	@Override
 	public void pushScreen(final Screen screen) {
@@ -93,29 +93,25 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-		if (screenToAdd != null) {
-			setNewScreen(screenToAdd);
-			screenToAdd = null;
-		}
-
 		if (currentScreen == null) return;
 
 		// current screen update
 		if (currentScreen.update()) { // terminate the current Screen ?
-			if (screens.size() == 1) {
-				if (screenToAdd != null) { // this.pushScreen may have been called by the current Screen
-					screens.pop();
-					setNewScreen(screenToAdd);
-					screenToAdd = null;
-				} else {
-					timer.stop();
-					System.exit(0);
-				}
+			screens.pop();
 
+			if (screens.empty() && screenToAdd == null) { // last Screen : exit
+				timer.stop();
+				System.exit(0);
 				return;
 			}
 
-			screens.pop();
+			currentScreen = screens.peek();
+		}
+
+		// Screen push ?
+		if (screenToAdd != null) {
+			setNewScreen(screenToAdd);
+			screenToAdd = null;
 			currentScreen = screens.peek();
 		}
 
