@@ -8,6 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Stack;
 
 import javax.swing.JPanel;
 import javax.swing.Timer;
@@ -16,12 +17,13 @@ import model.TetriminoColor;
 import model.TetrisBoard;
 import model.TetrisModel;
 import view.screens.Screen;
+import view.screens.ScreenContainer;
 
 /**
  * The Tetris game view.
  * This is a container for Screen instances.
  */
-public class TetrisView extends JPanel implements KeyListener, ActionListener {
+public class TetrisView extends JPanel implements KeyListener, ActionListener, ScreenContainer {
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -29,10 +31,9 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener {
 	 */
 	private static final Font TEXT_FONT = new Font(Font.SERIF, Font.BOLD, 16);
 
-	/*
-	 * The currently active screen.
-	 */
+	private Stack<Screen> screens = new Stack<>();
 	private Screen currentScreen;
+	private Screen screenToAdd = null;
 
 	private Timer timer;
 
@@ -51,10 +52,71 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener {
 		addKeyListener(this);
 
 		// screen management
+		timer = new Timer(1000, this);
+		setNewScreen(screen);
+	}
+
+	/**
+	 * Add a Screen to the stack, initialize it and set it as the current one.
+	 *
+	 * The actual operation will be done on the next update tick, to allow the
+	 * current Screen to properly terminate if needed.
+	 */
+	@Override
+	public void pushScreen(final Screen screen) {
+		if (screen == null)
+			throw new IllegalArgumentException("TetrisView.pushScreen : null Screen.");
+
+		screenToAdd = screen;
+	}
+
+	/**
+	 * Initialize the given Screen and set it as the current one.
+	 */
+	private void setNewScreen(final Screen screen) {
+		timer.stop();
+
 		currentScreen = screen;
-		timer = new Timer(currentScreen.updateRate(), this); // call this.actionPerformed at fixed intervals
-		screen.init();
+		screens.add(currentScreen);
+
+		currentScreen.init(this);
+
+		final int delay = currentScreen.updateRate();
+		timer.setInitialDelay(delay);
+		timer.setDelay(delay); // call this.actionPerformed at fixed intervals
 		timer.start();
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+
+		if (screenToAdd != null) {
+			setNewScreen(screenToAdd);
+			screenToAdd = null;
+		}
+
+		if (currentScreen == null) return;
+
+		// current screen update
+		if (currentScreen.update()) { // terminate the current Screen ?
+			if (screens.size() == 1) {
+				if (screenToAdd != null) { // this.pushScreen may have been called by the current Screen
+					screens.pop();
+					setNewScreen(screenToAdd);
+					screenToAdd = null;
+				} else {
+					timer.stop();
+					System.exit(0);
+				}
+
+				return;
+			}
+
+			screens.pop();
+			currentScreen = screens.peek();
+		}
+
+		repaint(); // refresh the view
 	}
 
 	/**
@@ -62,6 +124,8 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener {
 	 */
 	@Override
 	public void paint(Graphics g) {
+		if (currentScreen == null) return;
+
 		// clear the panel
 		g.setColor(currentScreen.backgroundColor());
 		g.fillRect(0, 0, getWidth(), getHeight());
@@ -76,21 +140,13 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener {
 		return new Color(color.red(), color.green(), color.blue());
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (currentScreen.update()) {
-			System.exit(0);
-			return;
-		}
-
-		repaint(); // refresh the view
-	}
-
 	/**
 	 * Called whenever a key is pressed.
 	 */
 	@Override
 	public void keyPressed(final KeyEvent e) {
+		if (currentScreen == null) return;
+
 		currentScreen.keyPressed(e);
 	}
 

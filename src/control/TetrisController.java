@@ -1,8 +1,11 @@
 package control;
 
+import java.util.ArrayList;
+
 import model.Tetrimino;
 import model.TetrisBoardCell;
 import model.TetrisModel;
+import model.TetrisScoreManager.TetrisHighScore;
 
 public class TetrisController {
 	private TetrisModel model;
@@ -56,6 +59,7 @@ public class TetrisController {
 	}
 
 	public int getScore() { return model.getScore(); }
+	public ArrayList<TetrisHighScore> getHighscores() { return model.getHighscores(); }
 	public Tetrimino getControlledTetrimino() { return model.getControlledTetrimino(); }
 	public TetrisBoardCell[][] getBoardCells() { return model.getBoardCells(); }
 

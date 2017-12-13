@@ -11,6 +11,11 @@ import java.awt.event.KeyEvent;
  */
 public abstract class Screen {
 	/**
+	 * The current container of the Screen.
+	 */
+	private ScreenContainer container;
+
+	/**
 	 * Interval between each 'update' call, in milliseconds.
 	 */
 	private int updateRate;
@@ -27,8 +32,12 @@ public abstract class Screen {
 
 	/**
 	 * Initialize the Screen's state.
+	 *
+	 * Must be called by overriding methods.
 	 */
-	public abstract void init();
+	public void init(final ScreenContainer container) {
+		this.container = container;
+	}
 
 	/**
 	 * Update the Screen's state.
@@ -52,5 +61,7 @@ public abstract class Screen {
 
 	public int updateRate() { return updateRate; }
 	public Color backgroundColor() { return backgroundColor; }
+
+	protected ScreenContainer container() { return container; }
 
 }

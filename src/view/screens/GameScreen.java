@@ -49,15 +49,20 @@ public class GameScreen extends Screen {
 	}
 
 	@Override
-	public void init() {
+	public void init(final ScreenContainer container) {
+		super.init(container);
+
 		gameController.startGame();
 	}
 
 	@Override
 	public boolean update() {
-		final boolean gameOver = gameController.updateGame();
+		if (gameController.updateGame()) { // game over ?
+			container().pushScreen(new GameOverScreen(gameController.getHighscores())); // request a game over recap Screen
+			return true; // terminate the Screen
+		}
 
-		return gameOver;
+		return false;
 	}
 
 	@Override

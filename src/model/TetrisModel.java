@@ -1,6 +1,9 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import model.TetrisScoreManager.TetrisHighScore;
 
 public class TetrisModel {
 	/**
@@ -47,8 +50,8 @@ public class TetrisModel {
 
 		// quickstart for test games
 		if (true) {
-			for (int y = TetrisBoard.HEIGHT - 5; y < TetrisBoard.HEIGHT; y++) {
-				for (int x = 0; x + 1 < TetrisBoard.WIDTH && x < y / 3; x++) {
+			for (int y = TetrisBoard.HEIGHT / 4; y < TetrisBoard.HEIGHT; y++) {
+				for (int x = 0; x + 1 < TetrisBoard.WIDTH; x++) {
 					board.getCells()[y][x].present = true;
 					board.getCells()[y][x].color = TetriminoColor.getColorFromType(TetriminoType.STICK);
 				}
@@ -60,7 +63,6 @@ public class TetrisModel {
 		System.out.format("Game Over ! Score = %d\n", score);
 		scoreManager.submit("PLAYER", score); // TODO : player name input...
 		scoreManager.save();
-		currentTetrimino = null;
 		gameOver = true;
 	}
 
@@ -70,6 +72,8 @@ public class TetrisModel {
 	 * @eturn True if game over, false otherwise.
 	 */
 	public boolean updateGame() {
+		if (gameOver) return true;
+
 		// current tetrimino fall
 		moveCurrentTetrimino(0, +1, true);
 		if (gameOver) return true; // game over ?
@@ -223,13 +227,16 @@ public class TetrisModel {
 	public int getScore() { return score; }
 
 	/**
+	 * Get the current highscores (loaded from and saved to the file system).
+	 */
+	public ArrayList<TetrisHighScore> getHighscores() { return scoreManager.getHighscores(); }
+
+	/**
 	 * Rotate the player's tetrimino.
 	 */
 	public void rotate() {
 		// TODO : add collision check (with border and blocks)
-		if (currentTetrimino != null) {
-			currentTetrimino.rotate(true);
-		}
+		currentTetrimino.rotate(true);
 	}
 
 	/**
