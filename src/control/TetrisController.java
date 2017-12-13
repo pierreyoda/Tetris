@@ -11,6 +11,22 @@ public class TetrisController {
 		this.model = model;
 	}
 
+	/*
+	 * Initialize and start the game.
+	 */
+	public void startGame() {
+		model.startGame();
+	}
+
+	/**
+	 * Update the game's state by one tick.
+	 *
+	 * @return True if the game is lost, false otherwise.
+	 */
+	public boolean updateGame() {
+		return model.updateGame();
+	}
+
 	/**
 	 * Called when the up key is pressed. Rotates the tetrimino.
 	 */

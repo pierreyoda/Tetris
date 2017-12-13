@@ -1,14 +1,8 @@
 package model;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Random;
 
-import javax.swing.Timer;
-
-import view.TetrisView;
-
-public class TetrisModel implements ActionListener {
+public class TetrisModel {
 	/**
 	 * The size of a single tetrimino block, in pixels.
 	 */
@@ -19,29 +13,22 @@ public class TetrisModel implements ActionListener {
 	 *
 	 * Must be strictly positive.
 	 */
-	private static int GAME_UPDATE_INTERVAL = 750;
+	public static int GAME_UPDATE_INTERVAL = 750;
 
-	private Timer timer;
 	private Random random = new Random();
 
 	private int score = 0;
 	private TetrisScoreManager scoreManager = new TetrisScoreManager();
+	private boolean gameOver = false;
 
 	private Tetrimino currentTetrimino;
 	private final TetrisBoard board = new TetrisBoard();
-
-	private TetrisView view = null; // needed to refresh the view after each update
-
-	public TetrisModel() {
-	}
 
 	/**
 	 * Initialize the game and start its execution.
 	 */
 	public void startGame() {
-		// sanity checks
-		if (view == null)
-			throw new IllegalStateException("TetrisModel.initGame : TetrisModel.setView must be called first.");
+		// sanity check
 		if (GAME_UPDATE_INTERVAL <= 0)
 			throw new IllegalStateException("TetrisModel.initGame : GAME_UPDATE_INTERVAL must be > 0.");
 
@@ -58,10 +45,6 @@ public class TetrisModel implements ActionListener {
 		// spawn a new tetrimino for the player to control
 		generateNewTetrimino();
 
-		// set up a timer to call the actionPerformed method at fixed intervals
-		timer = new Timer(GAME_UPDATE_INTERVAL, this);
-		timer.start();
-
 		// quickstart for test games
 		if (true) {
 			for (int y = TetrisBoard.HEIGHT - 5; y < TetrisBoard.HEIGHT; y++) {
@@ -73,41 +56,21 @@ public class TetrisModel implements ActionListener {
 		}
 	}
 
-	/**
-	 * Set the TetrisView instance responsible for displaying the game.
-	 *
-	 * Must be called before any update happens.
-	 */
-	public void setView(final TetrisView view) {
-		this.view = view;
+	private void gameOver() {
+		System.out.format("Game Over ! Score = %d\n", score);
+		currentTetrimino = null;
+		gameOver = true;
 	}
-
-	/**
-	 * Called every 'GAME_UPDATE_INTERVAL' milliseconds.
-	 */
-	@Override
-	public void actionPerformed(ActionEvent event) {
-		updateGame();
-
-		view.repaint();
-	}
-
-	/**
-	 * Pause the game.
-	 */
-	public void pause() { timer.stop(); }
-
-	/**
-	 * Unpause the game.
-	 */
-	public void unpause() { timer.restart(); }
 
 	/**
 	 * Update the game's state by one tick.
+	 *
+	 * @eturn True if game over, false otherwise.
 	 */
-	public void updateGame() {
+	public boolean updateGame() {
 		// current tetrimino fall
-		moveCurrentTetrimino(0, +1);
+		moveCurrentTetrimino(0, +1, true);
+		if (gameOver) return true; // game over ?
 
 		// lines clearing & scoring
 		final int linesCleared = board.checkForCompleteLines();
@@ -120,6 +83,8 @@ public class TetrisModel implements ActionListener {
 		System.out.println(board.toString());
 		System.out.format("score = %d\n", score);
 		System.out.println("\n\n\n");
+
+		return false;
 	}
 
 	/**
@@ -127,10 +92,15 @@ public class TetrisModel implements ActionListener {
 	 *
 	 * @param deltaX Offset along the X axis (horizontal).
 	 * @param deltaY Offset along the Y axis (vertical).
+	 * @param performMove True if the command is a real one, and not just a collision test.
+	 * If false, no movement will be performed.
+	 *
+	 * @return True if the movement is allowed (no collisions), false otherwise.
 	 */
-	private void moveCurrentTetrimino(final int deltaX, final int deltaY) {
+	private boolean moveCurrentTetrimino(final int deltaX, final int deltaY, boolean performMove) {
 		boolean collision = false;
 		final Tetrimino t = currentTetrimino;
+		if (t == null) return false;
 
 		final int posX = t.getX() + deltaX, posY = t.getY() + deltaY;
 
@@ -141,7 +111,7 @@ public class TetrisModel implements ActionListener {
 				final int x = posX + i, y = posY + j;
 
 				// borders movement check
-				if (x < 0 || x >= TetrisBoard.WIDTH || y < 0) return; // movement forbidden
+				if (x < 0 || x >= TetrisBoard.WIDTH || y < 0) return false; // movement forbidden
 
 				// bottom border collision
 				if (y >= TetrisBoard.HEIGHT) {
@@ -157,7 +127,7 @@ public class TetrisModel implements ActionListener {
 						break;
 					}
 					// ... or movement forbidden ?
-					return;
+					return false;
 				}
 			}
 		}
@@ -167,11 +137,22 @@ public class TetrisModel implements ActionListener {
 			board.addTetrimino(t);
 			generateNewTetrimino();
 			System.out.format("collision (x = %d, y = %d) !\n", t.getX(), t.getY());
-			return;
+
+			// check for gameover
+			if (t.getY() < 0) {
+				System.out.format("gameover (x = %d, y = %d, arg1) !\n", t.getX(), t.getY());
+				gameOver();
+			}
+
+			return false;
 		}
 
 		// at this point we can safely move the tetrimino
-		t.move(deltaX, deltaY);
+		if (performMove) {
+			t.move(deltaX, deltaY);
+		}
+
+		return true;
 	}
 
 	/**
@@ -190,11 +171,34 @@ public class TetrisModel implements ActionListener {
 	 */
 	private void generateNewTetrimino(final TetriminoType type) {
 		final TetriminoColor color = TetriminoColor.getColorFromType(type);
-		currentTetrimino = new Tetrimino(color, type,
-			random.nextInt(TetrisBoard.WIDTH),
-			0, Tetrimino.getBlocksFromType(type));
+		currentTetrimino = new Tetrimino(color, type, 0, 0,
+			Tetrimino.getBlocksFromType(type));
 
-		System.out.println(String.format("New tetrimino type = \"%s\"", type));
+		// try to find a free spot to spawn the tetrimino
+		boolean spawned = false;
+		int spawnPosition = 0;
+		if (moveCurrentTetrimino(TetrisBoard.WIDTH / 2, 0, false)) { // spawn in the middle by default
+			spawned = true;
+			spawnPosition = TetrisBoard.WIDTH / 2;
+		}
+		if (!spawned) {
+			for (int x = 0; x < TetrisBoard.WIDTH; x++) {
+				if (moveCurrentTetrimino(x, 0, false)) {
+					spawned = true;
+					spawnPosition = x;
+					break;
+				}
+			}
+		}
+
+		// did we succeed ?
+		if (!spawned) {
+			gameOver();
+			return;
+		}
+		currentTetrimino.move(spawnPosition, 0);
+		System.out.println(String.format("New tetrimino (type = \"%s\", positionX = %d)\n",
+								         type, spawnPosition));
 	}
 
 	/**
@@ -221,28 +225,30 @@ public class TetrisModel implements ActionListener {
 	 */
 	public void rotate() {
 		// TODO : add collision check (with border and blocks)
-		currentTetrimino.rotate(true);
+		if (currentTetrimino != null) {
+			currentTetrimino.rotate(true);
+		}
 	}
 
 	/**
 	 * Accelerate the fall of the player's tetrimino.
 	 */
 	public void speedUpFall() {
-		moveCurrentTetrimino(0, +1);
+		moveCurrentTetrimino(0, +1, true);
 	}
 
 	/**
 	 * Move the player's tetrimino to the left if possible.
 	 */
 	public void left() {
-		moveCurrentTetrimino(-1, 0);
+		moveCurrentTetrimino(-1, 0, true);
 	}
 
 	/**
 	 * Move the player's tetrimino to the right if possible.
 	 */
 	public void right() {
-		moveCurrentTetrimino(+1, 0);
+		moveCurrentTetrimino(+1, 0, true);
 	}
 
 	/**

@@ -2,17 +2,18 @@ import control.TetrisController;
 import model.TetrisModel;
 import view.TetrisView;
 import view.TetrisWindow;
+import view.screens.GameScreen;
 
 public class Main {
 
 	public static void main(String[] args) {
 		TetrisModel model = new TetrisModel();
 		TetrisController controller = new TetrisController(model);
-		TetrisView view = new TetrisView(controller);
+		GameScreen gameScreen = new GameScreen(controller);
+
+		TetrisView view = new TetrisView(gameScreen);
 		TetrisWindow window = new TetrisWindow(view);
 
-		model.setView(view);
-		model.startGame();
 		window.displayGame();
 	}
 
