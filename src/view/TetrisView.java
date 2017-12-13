@@ -53,7 +53,7 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 
 		// screen management
 		timer = new Timer(1000, this);
-		setNewScreen(screen);
+		setScreen(screen, true);
 	}
 
 	/**
@@ -71,18 +71,24 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 	}
 
 	/**
-	 * Initialize the given Screen and set it as the current one.
+	 * Set the given Screen as the current one.
+	 *
+	 * @param screen The screen.
+	 * @param newScreen If true, initialize the Screen first.
 	 */
-	private void setNewScreen(final Screen screen) {
+	private void setScreen(final Screen screen, final boolean newScreen) {
 		timer.stop();
 
 		currentScreen = screen;
-		screens.add(currentScreen);
 
-		currentScreen.init(this);
-		if (!currentScreen.hasContainer())
-			throw new IllegalStateException(
-				"TetrisView.setNewScreen : the given Screen has not set its container properly in its init method.");
+		if (newScreen) {
+			screens.push(currentScreen);
+
+			currentScreen.init(this);
+			if (!currentScreen.hasContainer())
+				throw new IllegalStateException(
+					"TetrisView.setNewScreen : the given Screen has not set its container properly in its init method.");
+		}
 
 		final int delay = currentScreen.updateRate();
 		timer.setInitialDelay(delay);
@@ -105,12 +111,12 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 				return;
 			}
 
-			currentScreen = screens.peek();
+			setScreen(screens.peek(), false); // resume the previous Screen's execution
 		}
 
 		// Screen push ?
 		if (screenToAdd != null) {
-			setNewScreen(screenToAdd);
+			setScreen(screenToAdd, true);
 			screenToAdd = null;
 			currentScreen = screens.peek();
 		}
