@@ -13,4 +13,9 @@ public interface ScreenContainer {
 	 */
 	public void pushScreen(final Screen screen);
 
+	/**
+	 * Request to close the application.
+	 */
+	public void requestExit();
+
 }

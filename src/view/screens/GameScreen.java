@@ -135,6 +135,9 @@ public class GameScreen extends Screen {
 	public void keyPressed(final KeyEvent e) {
 		final int keyCode = e.getKeyCode();
 		switch (keyCode) {
+		case KeyEvent.VK_ESCAPE:
+			container().pushScreen(new GamePauseScreen());
+			break;
 		case KeyEvent.VK_F1:
 			debugMode = !debugMode;
 			break;

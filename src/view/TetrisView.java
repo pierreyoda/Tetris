@@ -70,6 +70,12 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		screenToAdd = screen;
 	}
 
+	@Override
+	public void requestExit() {
+		timer.stop();
+		System.exit(0);
+	}
+
 	/**
 	 * Set the given Screen as the current one.
 	 *
