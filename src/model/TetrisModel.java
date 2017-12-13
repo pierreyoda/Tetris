@@ -58,6 +58,8 @@ public class TetrisModel {
 
 	private void gameOver() {
 		System.out.format("Game Over ! Score = %d\n", score);
+		scoreManager.submit("PLAYER", score); // TODO : player name input...
+		scoreManager.save();
 		currentTetrimino = null;
 		gameOver = true;
 	}
