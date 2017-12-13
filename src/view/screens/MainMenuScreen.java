@@ -64,6 +64,7 @@ public class MainMenuScreen extends Screen {
 
 		final FontRenderContext context = new FontRenderContext(null, true, true);
 		final Rectangle2D rect = font.getStringBounds(text, context);
+		final int x = w / 2, y = h / 3 + index * h / (BUTTONS_COUNT * 3);
 	    final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
 
 		g.setColor(index == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
