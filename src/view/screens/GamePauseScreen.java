@@ -13,8 +13,20 @@ public class GamePauseScreen extends Screen {
 	 */
 	private boolean resume = false;
 
+	/**
+	 * True if the menu was already drawn once.
+	 */
+	private boolean firstRender = true;
+
 	public GamePauseScreen() {
 		super(UPDATE_INTERVAL, Color.BLACK);
+
+		clearScreen = false; // transparent menu over the paused game
+	}
+
+	@Override
+	public void onResume() {
+		firstRender = true;
 	}
 
 	@Override
@@ -24,7 +36,11 @@ public class GamePauseScreen extends Screen {
 
 	@Override
 	public void render(final Graphics g, final Font textFont) {
+		if (!firstRender) return;
+
 		// TODO
+
+		firstRender = false;
 	}
 
 

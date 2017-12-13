@@ -94,6 +94,8 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 			if (!currentScreen.hasContainer())
 				throw new IllegalStateException(
 					"TetrisView.setNewScreen : the given Screen has not set its container properly in its init method.");
+		} else {
+			currentScreen.onResume();
 		}
 
 		final int delay = currentScreen.updateRate();
@@ -138,8 +140,10 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		if (currentScreen == null) return;
 
 		// clear the panel
-		g.setColor(currentScreen.backgroundColor());
-		g.fillRect(0, 0, getWidth(), getHeight());
+		if (currentScreen.clearScreen()) {
+			g.setColor(currentScreen.backgroundColor());
+			g.fillRect(0, 0, getWidth(), getHeight());
+		}
 		// render the current screen
 		currentScreen.render(g, TEXT_FONT);
 	}

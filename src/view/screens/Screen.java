@@ -20,10 +20,17 @@ public abstract class Screen {
 	 */
 	private int updateRate;
 
+	/**
+	 * If true, the display will be cleared with the 'backgroundColor' color
+	 * before each 'render' call.
+	 */
+	protected boolean clearScreen = true;
+
 	/*
 	 *The background color that should be used.
 	 */
 	private Color backgroundColor;
+
 
 	protected Screen(final int updateRate, final Color backgroundColor) {
 		this.updateRate = updateRate;
@@ -41,6 +48,12 @@ public abstract class Screen {
 	public void init(final ScreenContainer container) {
 		this.container = container;
 	}
+
+	/**
+	 * Called when resuming the Screen's execution after having switched to another
+	 * one before.
+	 */
+	public void onResume() { }
 
 	/**
 	 * Update the Screen's state.
@@ -63,6 +76,7 @@ public abstract class Screen {
 	public abstract void keyPressed(final KeyEvent e);
 
 	public int updateRate() { return updateRate; }
+	public boolean clearScreen() { return clearScreen; }
 	public Color backgroundColor() { return backgroundColor; }
 
 }
