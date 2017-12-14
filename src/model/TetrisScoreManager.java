@@ -54,8 +54,12 @@ public class TetrisScoreManager {
 
 		for (int i = 0; i < MAX_HIGHSCORES; i++) {
 			if (score > highscores.get(i).score) {
-				highscores.add(i, new TetrisHighScore(name, score));
+				final TetrisHighScore highscore = new TetrisHighScore(name, score);
+				highscores.add(i, highscore);
 				highscores.remove(highscores.size() - 1);
+				System.out.format(
+					"Score manager : added new high score (name = \"%s\", score = %d) at index %d\n",
+					highscore.name, highscore.score, i);
 				return true;
 			}
 		}

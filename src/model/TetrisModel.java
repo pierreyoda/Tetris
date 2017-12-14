@@ -91,9 +91,9 @@ public class TetrisModel {
 		}
 
 		// debug info
-		System.out.println(board.toString());
-		System.out.format("score = %d\n", score);
-		System.out.println("\n\n\n");
+		//System.out.println(board.toString());
+		//System.out.format("score = %d\n", score);
+		//System.out.println("\n\n\n");
 
 		return false;
 	}
@@ -208,8 +208,8 @@ public class TetrisModel {
 			return;
 		}
 		currentTetrimino.move(spawnPosition, 0);
-		System.out.println(String.format("New tetrimino (type = \"%s\", positionX = %d)\n",
-								         type, spawnPosition));
+		System.out.format("New tetrimino spawned (type = \"%s\", positionX = %d).\n",
+				          type, spawnPosition);
 	}
 
 	/**
