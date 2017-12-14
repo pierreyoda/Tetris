@@ -45,13 +45,6 @@ public class GameOverScreen extends Screen {
 	}
 
 	@Override
-	public void init(final ScreenContainer container) {
-		super.init(container);
-
-		System.out.format("GameOverScreen.init : top highscore = %d\n", highscores.get(0).score);
-	}
-
-	@Override
 	public boolean update() {
 		return skip;
 	}
@@ -63,6 +56,7 @@ public class GameOverScreen extends Screen {
 
 		final int w = container().containerWidth(), h = container().containerHeight();
 
+		// high scores table
 		drawCenteredText(g, textFont, w / 2, h / 4, "----- HIGH SCORES -----");
 		for (int i = 0; i < highscores.size(); i++) {
 			final TetrisHighScore highscore = highscores.get(i);
@@ -72,6 +66,10 @@ public class GameOverScreen extends Screen {
 			drawCenteredText(g, textFont,     w / 3, y, highscore.name);
 			drawCenteredText(g, textFont, 2 * w / 3, y, String.valueOf(highscore.score));
 		}
+
+		// instructions
+		drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
+			"PRESS SPACE OR ENTER TO CONTINUE");
 	}
 
 	private void drawCenteredText(final Graphics g, final Font font,
