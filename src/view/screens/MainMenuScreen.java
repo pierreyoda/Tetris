@@ -125,7 +125,7 @@ public class MainMenuScreen extends Screen {
 			container().pushScreen(new GameScreen(gameController));
 			break;
 		case 1: // high scores
-			container().pushScreen(new GameOverScreen(gameController.getHighscores(), true));
+			container().pushScreen(new HighScoresScreen(gameController.getHighscores(), true));
 			break;
 		case 2: // exit
 			exit = true;

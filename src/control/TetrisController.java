@@ -1,12 +1,12 @@
 package control;
 
-import java.util.ArrayList;
-
 import model.Tetrimino;
 import model.TetrisBoardCell;
 import model.TetrisGameSession;
 import model.TetrisModel;
 import model.TetrisScoreManager.TetrisHighScore;
+
+import java.util.ArrayList;
 
 public class TetrisController {
 	private TetrisModel model;
@@ -29,6 +29,13 @@ public class TetrisController {
 	 */
 	public boolean updateGame() {
 		return model.updateGame();
+	}
+
+	/**
+	 * Submit a new high score and save it.
+	 */
+	public void submitHighScoreAndSave(final String name, final int score) {
+		model.submitScoreAndSave(name, score);
 	}
 
 	/**

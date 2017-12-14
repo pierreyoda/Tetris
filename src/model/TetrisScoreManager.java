@@ -42,7 +42,24 @@ public class TetrisScoreManager {
 		}
 	}
 
-	/** Submit a new highscore.
+	/**
+	 * Check if the given score is enough to qualify in the top high scores.
+	 * No modification will be made.
+	 *
+	 * @param score Score to check.
+	 *
+	 * @return Index of the new high score (or -1 if score was not enough).
+	 */
+	public int scoreQualifies(final int score) {
+		for (int i = 0; i < MAX_HIGHSCORES; i++) {
+			if (score > highscores.get(i).score) return i;
+		}
+		return -1;
+	}
+
+	/** Submit a new high score.
+	 *
+	 * If two high scores are identical, the new one will be inserted after the old one.
 	 *
 	 * @param name Name of the player. Must not contain the 'SCORE_DELIMITER' string.
 	 * @param score Score to be submitted.

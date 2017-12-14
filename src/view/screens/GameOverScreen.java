@@ -1,152 +1,119 @@
 package view.screens;
 
+import control.TetrisController;
 import model.TetrisGameSession;
-import model.TetrisScoreManager.TetrisHighScore;
 import view.RenderingUtilities;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 
 /**
- * The game over screen displayed at the end of a Tetris game shows a recap of the
- * game session and displays the high scores.
+ * This Screen displays a recap of the game session (scores, number of cleared lines).
  *
- * Alternatively, this Screen can also only display the high scores.
- *
+ * It also allows the player to enter a name when he achieves a new high score.
  */
 public class GameOverScreen extends Screen {
-	private static final int UPDATE_INTERVAL = 50; // we want to be responsive to a skip command
-	private static final Color BACKGROUND_COLOR = MainMenuScreen.BACKGROUND_COLOR;
-	private static final Color TEXT_COLOR = Color.WHITE;
-	private static final Color TEXT_COLOR_HIGHLIGHT = Color.YELLOW;
-	private static final long SCORE_HIGHLIGHT_BLINK_DELAY = 1_000_000_000; // in ns
+    private static final int UPDATE_INTERVAL = 50;
+    private static final Color BACKGROUND_COLOR = MainMenuScreen.BACKGROUND_COLOR;
+    private static final Color TEXT_COLOR = Color.WHITE;
 
-	/**
-	 * If true, exit the current screen.
-	 */
-	private boolean skip = false;
+    private static final int PLAYER_NAME_MAX_LENGTH = 10;
 
-	/**
-	 * If true, display only the high scores (no game over recap).
-	 */
-	private boolean onlyScores;
+    private final TetrisController gameController;
+    private final TetrisGameSession gameSession;
 
-	/**
-	 * Array of all the highscores. The first highscore must be the highest one.
-	 */
-	private final ArrayList<TetrisHighScore> highscores;
+    private boolean finished = false;
+    private boolean hasPressedEnter = false;
+    private String playerName = "";
 
-	/**
-	 * Informations about the game that was just played.
-	 */
-	private TetrisGameSession gameSession = null;
+    public GameOverScreen(final TetrisController gameController) {
+        super(UPDATE_INTERVAL, BACKGROUND_COLOR);
 
-	private long newHighScoreLastBlink = System.nanoTime();
-	private boolean newHighScoreHighlighted = true;
-	private Color newHighScoreCurrentColor = TEXT_COLOR_HIGHLIGHT;
+        this.gameController = gameController;
+        this.gameSession = gameController.getLastGameSession();
+    }
 
-	public GameOverScreen(final ArrayList<TetrisHighScore> highscores, final boolean onlyScores) {
-		super(UPDATE_INTERVAL, BACKGROUND_COLOR);
+    @Override
+    public boolean update() {
+        if (finished && playerName.trim().length() > 0) {
+            System.out.format("Player name input : \"%s\".\n", playerName);
+            gameController.submitHighScoreAndSave(playerName, gameSession.score());
 
-		this.highscores = highscores;
-		this.onlyScores = onlyScores;
-	}
+            final Screen nextScreen = new HighScoresScreen(gameController.getHighscores(), false)
+                .setGameSession(gameSession);
+            container().pushScreen(nextScreen);
+            return true;
+        }
+        return false;
+    }
 
-	/**
-	 * After a game over, this method allows to define the game session that
-	 * was just played.
-	 * @param gameSession Tetris game session informations.
-	 * @return The GameOverScreen instance.
-	 */
-	public GameOverScreen setGameSession(final TetrisGameSession gameSession) {
-		this.gameSession = gameSession;
+    @Override
+    public void render(Graphics2D g2d, Font textFont) {
+        g2d.setColor(TEXT_COLOR);
+        g2d.setFont(textFont);
 
-		return this;
-	}
+        final int w = container().containerWidth(), h = container().containerHeight();
 
-	@Override
-	public boolean update() {
-		return skip;
-	}
+        // game recap
+        final int score = gameSession.score();
+        final int linesCleared = gameSession.linesCleared();
 
-	@Override
-	public void render(final Graphics2D g2d, final Font textFont) {
-		g2d.setColor(TEXT_COLOR);
-		g2d.setFont(textFont);
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 10),
+            "GAME OVER !");
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (1.5 * h / 10),
+            String.format("Score : %d", score));
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (2 * h / 10),
+            String.format("Number of lines cleared : %d", linesCleared));
 
-		final int w = container().containerWidth(), h = container().containerHeight();
-		final int newHighScoreIndex = onlyScores ? -1 : gameSession.newHighScoreIndex();
+        // player name input
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 2),
+            "INPUT PLAYER NAME");
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.8),
+            "(PRESS ENTER TWICE TO VALIDATE)");
+        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.5),
+            playerName);
+    }
 
-		// game recap
-		if (!onlyScores) {
-			final int score = gameSession.score();
-			final int linesCleared = gameSession.linesCleared();
+    @Override
+    public void keyPressed(KeyEvent e) {
+        final int keyCode = e.getKeyCode();
 
-			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 10),
-				"GAME OVER !");
-			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (1.5 * h / 10),
-				String.format("Score : %d", score));
-			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (2 * h / 10),
-				String.format("Number of lines cleared : %d", linesCleared));
-		}
+        if (gameSession.newHighScoreIndex() < 0) {
+            if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) {
+                finished = true;
+            }
+            return;
+        }
 
-		// high scores table
-		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, h / 4,
-			"----- HIGH SCORES -----");
-		if (!onlyScores && newHighScoreIndex >= 0) {
-			g2d.setColor(TEXT_COLOR_HIGHLIGHT);
-			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 3.5),
-				"NEW HIGH SCORE !");
-		}
-		for (int i = 0; i < highscores.size(); i++) {
-			final TetrisHighScore highscore = highscores.get(i);
-			if (highscore.score <= 0) break;
+        switch (keyCode) {
+        // double enter to validate
+        case KeyEvent.VK_ENTER:
+            if (!playerName.trim().isEmpty()) {
+                if (hasPressedEnter)
+                    finished = true;
+                else
+                    hasPressedEnter = true;
+            }
+            return;
+        // add space
+        case KeyEvent.VK_SPACE:
+            playerName += ' ';
+            return;
+        // delete last character
+        case KeyEvent.VK_BACK_SPACE:
+        case KeyEvent.VK_DELETE:
+            if (playerName.length() > 0) {
+                playerName = playerName.substring(0, playerName.length() - 1);
+            }
+            return;
+        }
 
-			final int y = h / 3 + i * h / (highscores.size() * 4);
-
-			g2d.setColor(TEXT_COLOR);
-
-			// high scores after game over : highlight the new high score with blink
-			if (!onlyScores && i == newHighScoreIndex) {
-				final long t = System.nanoTime();
-				if (t - newHighScoreLastBlink >= SCORE_HIGHLIGHT_BLINK_DELAY) {
-					newHighScoreLastBlink = t;
-					newHighScoreCurrentColor = newHighScoreHighlighted ? TEXT_COLOR : TEXT_COLOR_HIGHLIGHT;
-					newHighScoreHighlighted = !newHighScoreHighlighted;
-				}
-				g2d.setColor(newHighScoreCurrentColor);
-			}
-
-			// name
-			RenderingUtilities.drawCenteredText(g2d, textFont,     w / 3, y,
-				highscore.name);
-			// score
-			RenderingUtilities.drawCenteredText(g2d, textFont, 2 * w / 3, y,
-				String.valueOf(highscore.score));
-		}
-
-		// instructions
-		g2d.setColor(TEXT_COLOR);
-		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 1.2),
-			"PRESS SPACE OR ENTER TO CONTINUE");
-		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h/1.1),
-			"PRESS ESCAPE TO EXIT");
-	}
-
-
-	@Override
-	public void keyPressed(final KeyEvent e) {
-		final int keyCode = e.getKeyCode();
-		switch (keyCode) {
-		case KeyEvent.VK_ESCAPE:
-			container().requestExit();
-			break;
-		case KeyEvent.VK_ENTER:
-		case KeyEvent.VK_SPACE:
-			skip = true;
-			break;
-		}
-	}
-
+        // character input
+        if (playerName.length() >= PLAYER_NAME_MAX_LENGTH) return;
+        if ((65 <= keyCode && keyCode <= 90) // A-Z
+            || (48 <= keyCode && keyCode <= 57)) // 0-9
+            playerName += KeyEvent.getKeyText(keyCode);
+        if (96 <= keyCode && keyCode <= 105) // Numpad 0-9
+            playerName += String.valueOf(keyCode - 96);
+    }
 }

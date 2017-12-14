@@ -1,9 +1,9 @@
 package model;
 
+import model.TetrisScoreManager.TetrisHighScore;
+
 import java.util.ArrayList;
 import java.util.Random;
-
-import model.TetrisScoreManager.TetrisHighScore;
 
 public class TetrisModel {
 	/**
@@ -71,13 +71,19 @@ public class TetrisModel {
 	private void gameOver() {
 		if (gameOver) return;
 
-		final String playerName = "PLAYER"; // TODO : player name input
-		System.out.format("Game Over ! Score = %d, name = \"%s\".\n", score, playerName);
-		final int newHighScoreIndex = scoreManager.submit(playerName, score);
-		scoreManager.save();
+		System.out.format("Game Over ! Score = %d\n", score);
+		final int newHighScoreIndex = scoreManager.scoreQualifies(score);
 
 		gameOver = true;
 		gameSession = new TetrisGameSession(score, newHighScoreIndex, linesCleared);
+	}
+
+	/**
+	 * Submit a new high score and save it.
+	 */
+	public void submitScoreAndSave(final String name, final int score) {
+		scoreManager.submit(name, score);
+		scoreManager.save();
 	}
 
 	/**
