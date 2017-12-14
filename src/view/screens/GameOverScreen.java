@@ -110,6 +110,8 @@ public class GameOverScreen extends Screen {
 		g.setColor(TEXT_COLOR);
 		drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
 			"PRESS SPACE OR ENTER TO CONTINUE");
+		drawCenteredText(g, textFont, w / 2, (int)(h/1.1),
+			"PRESS ESCAPE TO EXIT");
 	}
 
 	private void drawCenteredText(final Graphics g, final Font font,
@@ -124,8 +126,14 @@ public class GameOverScreen extends Screen {
 	@Override
 	public void keyPressed(final KeyEvent e) {
 		final int keyCode = e.getKeyCode();
-		if (keyCode == KeyEvent.VK_ENTER || keyCode == KeyEvent.VK_SPACE) {
+		switch (keyCode) {
+		case KeyEvent.VK_ESCAPE:
+			container().requestExit();
+			break;
+		case KeyEvent.VK_ENTER:
+		case KeyEvent.VK_SPACE:
 			skip = true;
+			break;
 		}
 	}
 
