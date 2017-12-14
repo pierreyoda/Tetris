@@ -1,8 +1,10 @@
 .classpath
 .project
 .settings
+.idea
 
 *.class
+*.iml
 
 /bin/
 /screens/
