@@ -24,8 +24,8 @@ import java.io.IOException;
 public class MainMenuScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50; // we want to be responsive to a skip command
 
-	private static final Font BANNER_FONT = new Font(Font.SERIF, Font.BOLD, 100);
-	private static final Color BANNER_COLOR = Color.BLACK;
+	public static final Font BANNER_FONT = new Font(Font.SERIF, Font.BOLD, 100);
+	public static final Color BANNER_COLOR = Color.BLACK;
 
 	public static final Color BACKGROUND_COLOR = new Color(60, 70, 80);
 	private static final Color BUTTON_TEXT_COLOR = Color.WHITE;

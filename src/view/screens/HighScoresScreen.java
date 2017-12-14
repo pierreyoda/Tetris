@@ -71,13 +71,21 @@ public class HighScoresScreen extends Screen {
 
 	@Override
 	public void render(final Graphics2D g2d, final Font textFont) {
-		g2d.setColor(TEXT_COLOR);
 		g2d.setFont(textFont);
+		g2d.setColor(TEXT_COLOR);
 
 		final int w = container().containerWidth(), h = container().containerHeight();
 		final int newHighScoreIndex = onlyScores ? -1 : gameSession.newHighScoreIndex();
 
-		// second panel : high scores table
+		// banner title
+		g2d.setFont(MainMenuScreen.BANNER_FONT);
+		g2d.setColor(MainMenuScreen.BANNER_COLOR);
+		RenderingUtilities.drawCenteredText(g2d, MainMenuScreen.BANNER_FONT, w / 2, h / 20,
+			"TETRIS");
+
+		// high scores table
+		g2d.setFont(textFont);
+		g2d.setColor(TEXT_COLOR);
         renderHighScoresTable(g2d, textFont, w, h, newHighScoreIndex);
 
 		// instructions
