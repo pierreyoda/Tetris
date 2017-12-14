@@ -1,12 +1,14 @@
 package view.screens;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-
 import control.TetrisController;
 import view.RenderingUtilities;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * <pre>
@@ -29,6 +31,8 @@ public class MainMenuScreen extends Screen {
 	private static final Color BUTTON_TEXT_COLOR = Color.WHITE;
 	private static final Color BUTTON_SELECTED_TEXT_COLOR = Color.YELLOW;
 
+	private BufferedImage selectionCursorImage;
+
 	private static final String[] BUTTONS_TEXT = {
 		"Start Game",
 		"High Scores",
@@ -48,6 +52,17 @@ public class MainMenuScreen extends Screen {
 	}
 
 	@Override
+	public void init(final ScreenContainer container) {
+		super.init(container);
+
+		try {
+			selectionCursorImage = ImageIO.read(new File("data/selection.png"));
+		} catch (IOException e) {
+			throw new IllegalStateException("Cannot read cursor selection image from data/ folder.");
+		}
+	}
+
+	@Override
 	public boolean update() {
 		return exit;
 	}
@@ -56,16 +71,25 @@ public class MainMenuScreen extends Screen {
 	public void render(Graphics g, Font textFont) {
 		final int w = container().containerWidth(), h = container().containerHeight();
 
+		// banner title
 		g.setFont(BANNER_FONT);
 		g.setColor(BANNER_COLOR);
 		RenderingUtilities.drawCenteredText(g, BANNER_FONT, w / 2, h / 20,
 			"TETRIS");
 
+		// menu buttons
 		g.setFont(textFont);
 		for (int i = 0; i < BUTTONS_COUNT; i++) {
 			final String text = BUTTONS_TEXT[i];
 			final int x = w / 2, y = (int)(h / 2.5) + i * h / (BUTTONS_COUNT * 3);
-			g.setColor(i == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
+			if (i == selectionIndex) {
+				g.setColor(BUTTON_SELECTED_TEXT_COLOR);
+				g.drawImage(selectionCursorImage,
+							(int)(w / 3), y + selectionCursorImage.getHeight(),
+							null);
+			} else {
+				g.setColor(BUTTON_TEXT_COLOR);
+			}
 			RenderingUtilities.drawCenteredText(g, textFont, x, y, text);
 		}
 	}
