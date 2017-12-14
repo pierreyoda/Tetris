@@ -34,7 +34,6 @@ public class TetrisModel {
 			System.out.println("Score manager : failed to load the highscores.");
 			System.exit(1);
 		}
-		System.out.println("Score manager : loaded highscores.");
 	}
 
 	/**

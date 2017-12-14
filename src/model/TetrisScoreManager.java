@@ -106,6 +106,9 @@ public class TetrisScoreManager {
 			return false;
 		}
 
+		System.out.format("Score manager : loaded high scores from file \"%s\"\n",
+						  SCORES_FILEPATH);
+
 		return true;
 	}
 
@@ -135,6 +138,9 @@ public class TetrisScoreManager {
 			e.printStackTrace();
 			return false;
 		}
+
+		System.out.format("Score manager : saved high scores to file \"%s\"\n",
+						  SCORES_FILEPATH);
 
 		return true;
 	}
