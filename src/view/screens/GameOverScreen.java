@@ -85,6 +85,7 @@ public class GameOverScreen extends Screen {
             return;
         }
 
+        boolean nameModified = false;
         switch (keyCode) {
         // double enter to validate
         case KeyEvent.VK_ENTER:
@@ -104,6 +105,7 @@ public class GameOverScreen extends Screen {
         case KeyEvent.VK_DELETE:
             if (playerName.length() > 0) {
                 playerName = playerName.substring(0, playerName.length() - 1);
+                hasPressedEnter = false;
             }
             return;
         }
@@ -111,9 +113,17 @@ public class GameOverScreen extends Screen {
         // character input
         if (playerName.length() >= PLAYER_NAME_MAX_LENGTH) return;
         if ((65 <= keyCode && keyCode <= 90) // A-Z
-            || (48 <= keyCode && keyCode <= 57)) // 0-9
+            || (48 <= keyCode && keyCode <= 57)) { // 0-9
             playerName += KeyEvent.getKeyText(keyCode);
-        if (96 <= keyCode && keyCode <= 105) // Numpad 0-9
+            nameModified = true;
+        }
+        if (96 <= keyCode && keyCode <= 105) { // Numpad 0-9
             playerName += String.valueOf(keyCode - 96);
+            nameModified = true;
+        }
+
+        // name modified : reset validation status
+        if (nameModified)
+            hasPressedEnter = false;
     }
 }
