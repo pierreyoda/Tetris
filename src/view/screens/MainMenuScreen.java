@@ -4,10 +4,9 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 
 import control.TetrisController;
+import view.RenderingUtilities;
 
 /**
  * <pre>
@@ -52,23 +51,15 @@ public class MainMenuScreen extends Screen {
 
 	@Override
 	public void render(Graphics g, Font textFont) {
+		final int w = container().containerWidth(), h = container().containerHeight();
+
 		g.setFont(textFont);
 		for (int i = 0; i < BUTTONS_COUNT; i++) {
-			drawButton(g, textFont, i);
+			final String text = BUTTONS_TEXT[i];
+			final int x = w / 2, y = h / 3 + i * h / (BUTTONS_COUNT * 3);
+			g.setColor(i == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
+			RenderingUtilities.drawCenteredText(g, textFont, x, y, text);
 		}
-	}
-
-	private void drawButton(final Graphics g, final Font font, final int index) {
-		final int w = container().containerWidth(), h = container().containerHeight();
-		final String text = BUTTONS_TEXT[index];
-
-		final FontRenderContext context = new FontRenderContext(null, true, true);
-		final Rectangle2D rect = font.getStringBounds(text, context);
-		final int x = w / 2, y = h / 3 + index * h / (BUTTONS_COUNT * 3);
-	    final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
-
-		g.setColor(index == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
-		g.drawString(text, posX, posY);
 	}
 
 	@Override

@@ -4,11 +4,10 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import model.TetrisScoreManager.TetrisHighScore;
+import view.RenderingUtilities;
 
 /**
  * The game over screen displayed at the end of a Tetris game shows a recap of the
@@ -80,7 +79,8 @@ public class GameOverScreen extends Screen {
 		final int w = container().containerWidth(), h = container().containerHeight();
 
 		// high scores table
-		drawCenteredText(g, textFont, w / 2, h / 4, "----- HIGH SCORES -----");
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, h / 4,
+			"----- HIGH SCORES -----");
 		for (int i = 0; i < highscores.size(); i++) {
 			final TetrisHighScore highscore = highscores.get(i);
 			if (highscore.score <= 0) break;
@@ -101,27 +101,21 @@ public class GameOverScreen extends Screen {
 			}
 
 			// name
-			drawCenteredText(g, textFont,     w / 3, y, highscore.name);
+			RenderingUtilities.drawCenteredText(g, textFont,     w / 3, y,
+				highscore.name);
 			// score
-			drawCenteredText(g, textFont, 2 * w / 3, y, String.valueOf(highscore.score));
+			RenderingUtilities.drawCenteredText(g, textFont, 2 * w / 3, y,
+				String.valueOf(highscore.score));
 		}
 
 		// instructions
 		g.setColor(TEXT_COLOR);
-		drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
 			"PRESS SPACE OR ENTER TO CONTINUE");
-		drawCenteredText(g, textFont, w / 2, (int)(h/1.1),
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h/1.1),
 			"PRESS ESCAPE TO EXIT");
 	}
 
-	private void drawCenteredText(final Graphics g, final Font font,
-								  final int x, final int y,
-								  final String text) {
-		final FontRenderContext context = new FontRenderContext(null, true, true);
-		final Rectangle2D rect = font.getStringBounds(text, context);
-		final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
-		g.drawString(text, posX, posY);
-	}
 
 	@Override
 	public void keyPressed(final KeyEvent e) {

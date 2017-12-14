@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.Rectangle2D;
+
+import view.RenderingUtilities;
 
 public class GamePauseScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50;
@@ -47,20 +47,14 @@ public class GamePauseScreen extends Screen {
 
 		final int w = container().containerWidth(), h = container().containerHeight();
 
-		drawCenteredText(g, textFont, w / 2, h / 2, "PAUSED");
-		drawCenteredText(g, textFont, w / 2, (int)(h / 1.7), "SPACE OR ENTER TO RESUME");
-		drawCenteredText(g, textFont, w / 2, (int)(h / 1.3), "ESCAPE TO QUIT");
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, h / 2,
+			"PAUSED");
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.7),
+			"SPACE OR ENTER TO RESUME");
+		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.3),
+			"ESCAPE TO QUIT");
 
 		firstRender = false;
-	}
-
-	private void drawCenteredText(final Graphics g, final Font font,
-								  final int x, final int y,
-								  final String text) {
-		final FontRenderContext context = new FontRenderContext(null, true, true);
-		final Rectangle2D rect = font.getStringBounds(text, context);
-	    final int posX = x - (int)(rect.getWidth() / 2), posY = y + (int)(rect.getHeight());
-	    g.drawString(text, posX, posY);
 	}
 
 	@Override
