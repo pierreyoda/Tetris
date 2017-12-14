@@ -68,29 +68,29 @@ public class MainMenuScreen extends Screen {
 	}
 
 	@Override
-	public void render(Graphics g, Font textFont) {
+	public void render(Graphics2D g2d, Font textFont) {
 		final int w = container().containerWidth(), h = container().containerHeight();
 
 		// banner title
-		g.setFont(BANNER_FONT);
-		g.setColor(BANNER_COLOR);
-		RenderingUtilities.drawCenteredText(g, BANNER_FONT, w / 2, h / 20,
+		g2d.setFont(BANNER_FONT);
+		g2d.setColor(BANNER_COLOR);
+		RenderingUtilities.drawCenteredText(g2d, BANNER_FONT, w / 2, h / 20,
 			"TETRIS");
 
 		// menu buttons
-		g.setFont(textFont);
+		g2d.setFont(textFont);
 		for (int i = 0; i < BUTTONS_COUNT; i++) {
 			final String text = BUTTONS_TEXT[i];
 			final int x = w / 2, y = (int)(h / 2.5) + i * h / (BUTTONS_COUNT * 3);
 			if (i == selectionIndex) {
-				g.setColor(BUTTON_SELECTED_TEXT_COLOR);
-				g.drawImage(selectionCursorImage,
+				g2d.setColor(BUTTON_SELECTED_TEXT_COLOR);
+				g2d.drawImage(selectionCursorImage,
 							(int)(w / 3), y + selectionCursorImage.getHeight(),
 							null);
 			} else {
-				g.setColor(BUTTON_TEXT_COLOR);
+				g2d.setColor(BUTTON_TEXT_COLOR);
 			}
-			RenderingUtilities.drawCenteredText(g, textFont, x, y, text);
+			RenderingUtilities.drawCenteredText(g2d, textFont, x, y, text);
 		}
 	}
 

@@ -1,8 +1,6 @@
 package view.screens;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
@@ -64,11 +62,10 @@ public abstract class Screen {
 
 	/**
 	 * Render the Screen's state.
-	 *
-	 * @param g Does the actual drawing of primitives.
+	 * @param g2d Does the actual drawing of 2D primitives.
 	 * @param textFont Default font to be used for drawing text.
 	 */
-	public abstract void render(final Graphics g, final Font textFont);
+	public abstract void render(final Graphics2D g2d, final Font textFont);
 
 	/**
 	 * Called whenever a key is pressed.

@@ -1,23 +1,18 @@
 package view;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.util.Stack;
-
-import javax.swing.JPanel;
-import javax.swing.Timer;
-
 import model.TetriminoColor;
 import model.TetrisBoard;
 import model.TetrisModel;
 import view.screens.Screen;
 import view.screens.ScreenContainer;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.Stack;
 
 /**
  * The Tetris game view.
@@ -154,13 +149,19 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 	public void paint(Graphics g) {
 		if (currentScreen == null) return;
 
+		final Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+			RenderingHints.VALUE_ANTIALIAS_ON);
+		g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+			RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
 		// clear the panel
 		if (currentScreen.clearScreen()) {
-			g.setColor(currentScreen.backgroundColor());
-			g.fillRect(0, 0, getWidth(), getHeight());
+			g2d.setColor(currentScreen.backgroundColor());
+			g2d.fillRect(0, 0, getWidth(), getHeight());
 		}
 		// render the current screen
-		currentScreen.render(g, TEXT_FONT);
+		currentScreen.render(g2d, TEXT_FONT);
 	}
 
 	/**

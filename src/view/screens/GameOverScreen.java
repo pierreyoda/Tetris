@@ -1,14 +1,12 @@
 package view.screens;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-
 import model.TetrisGameSession;
 import model.TetrisScoreManager.TetrisHighScore;
 import view.RenderingUtilities;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 /**
  * The game over screen displayed at the end of a Tetris game shows a recap of the
@@ -73,9 +71,9 @@ public class GameOverScreen extends Screen {
 	}
 
 	@Override
-	public void render(final Graphics g, final Font textFont) {
-		g.setColor(TEXT_COLOR);
-		g.setFont(textFont);
+	public void render(final Graphics2D g2d, final Font textFont) {
+		g2d.setColor(TEXT_COLOR);
+		g2d.setFont(textFont);
 
 		final int w = container().containerWidth(), h = container().containerHeight();
 		final int newHighScoreIndex = onlyScores ? -1 : gameSession.newHighScoreIndex();
@@ -85,20 +83,20 @@ public class GameOverScreen extends Screen {
 			final int score = gameSession.score();
 			final int linesCleared = gameSession.linesCleared();
 
-			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (h / 10),
+			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 10),
 				"GAME OVER !");
-			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (1.5 * h / 10),
+			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (1.5 * h / 10),
 				String.format("Score : %d", score));
-			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (2 * h / 10),
+			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (2 * h / 10),
 				String.format("Number of lines cleared : %d", linesCleared));
 		}
 
 		// high scores table
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, h / 4,
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, h / 4,
 			"----- HIGH SCORES -----");
 		if (!onlyScores && newHighScoreIndex >= 0) {
-			g.setColor(TEXT_COLOR_HIGHLIGHT);
-			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 3.5),
+			g2d.setColor(TEXT_COLOR_HIGHLIGHT);
+			RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 3.5),
 				"NEW HIGH SCORE !");
 		}
 		for (int i = 0; i < highscores.size(); i++) {
@@ -107,7 +105,7 @@ public class GameOverScreen extends Screen {
 
 			final int y = h / 3 + i * h / (highscores.size() * 4);
 
-			g.setColor(TEXT_COLOR);
+			g2d.setColor(TEXT_COLOR);
 
 			// high scores after game over : highlight the new high score with blink
 			if (!onlyScores && i == newHighScoreIndex) {
@@ -117,22 +115,22 @@ public class GameOverScreen extends Screen {
 					newHighScoreCurrentColor = newHighScoreHighlighted ? TEXT_COLOR : TEXT_COLOR_HIGHLIGHT;
 					newHighScoreHighlighted = !newHighScoreHighlighted;
 				}
-				g.setColor(newHighScoreCurrentColor);
+				g2d.setColor(newHighScoreCurrentColor);
 			}
 
 			// name
-			RenderingUtilities.drawCenteredText(g, textFont,     w / 3, y,
+			RenderingUtilities.drawCenteredText(g2d, textFont,     w / 3, y,
 				highscore.name);
 			// score
-			RenderingUtilities.drawCenteredText(g, textFont, 2 * w / 3, y,
+			RenderingUtilities.drawCenteredText(g2d, textFont, 2 * w / 3, y,
 				String.valueOf(highscore.score));
 		}
 
 		// instructions
-		g.setColor(TEXT_COLOR);
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
+		g2d.setColor(TEXT_COLOR);
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 1.2),
 			"PRESS SPACE OR ENTER TO CONTINUE");
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h/1.1),
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h/1.1),
 			"PRESS ESCAPE TO EXIT");
 	}
 

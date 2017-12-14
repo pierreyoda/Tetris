@@ -1,11 +1,9 @@
 package view.screens;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-
 import view.RenderingUtilities;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 public class GamePauseScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50;
@@ -39,19 +37,19 @@ public class GamePauseScreen extends Screen {
 	}
 
 	@Override
-	public void render(final Graphics g, final Font textFont) {
+	public void render(final Graphics2D g2d, final Font textFont) {
 		if (!firstRender) return;
 
-		g.setColor(TEXT_COLOR);
-		g.setFont(textFont);
+		g2d.setColor(TEXT_COLOR);
+		g2d.setFont(textFont);
 
 		final int w = container().containerWidth(), h = container().containerHeight();
 
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, h / 2,
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, h / 2,
 			"PAUSED");
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.7),
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 1.7),
 			"SPACE OR ENTER TO RESUME");
-		RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 1.3),
+		RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int)(h / 1.3),
 			"ESCAPE TO QUIT");
 
 		firstRender = false;
