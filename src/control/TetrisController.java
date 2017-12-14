@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import model.Tetrimino;
 import model.TetrisBoardCell;
+import model.TetrisGameSession;
 import model.TetrisModel;
 import model.TetrisScoreManager.TetrisHighScore;
 
@@ -60,7 +61,7 @@ public class TetrisController {
 
 	public int getScore() { return model.getScore(); }
 	public ArrayList<TetrisHighScore> getHighscores() { return model.getHighscores(); }
-	public int getNewHighScoreIndex() { return model.getNewHighScoreIndex(); }
+	public TetrisGameSession getLastGameSession() { return model.getLastGameSession(); }
 	public Tetrimino getControlledTetrimino() { return model.getControlledTetrimino(); }
 	public TetrisBoardCell[][] getBoardCells() { return model.getBoardCells(); }
 

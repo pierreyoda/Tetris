@@ -66,7 +66,7 @@ public abstract class Screen {
 	 * Render the Screen's state.
 	 *
 	 * @param g Does the actual drawing of primitives.
-	 * @param textFont Font to be used for drawing text.
+	 * @param textFont Default font to be used for drawing text.
 	 */
 	public abstract void render(final Graphics g, final Font textFont);
 

@@ -11,26 +11,26 @@ public interface ScreenContainer {
 	/**
 	 * Add a new Screen to the stack, initialize it and set it as the current one.
 	 */
-	public void pushScreen(final Screen screen);
+	void pushScreen(final Screen screen);
 
 	/**
 	 * Pop the previous Screen from the stack.
 	 */
-	public void deletePreviousScreen();
+	void deletePreviousScreen();
 
 	/**
 	 * Request to close the application.
 	 */
-	public void requestExit();
+	void requestExit();
 
 	/**
 	 * Get the target display's width.
 	 */
-	public int containerWidth();
+	int containerWidth();
 
 	/**
 	 * Get the target display's height.
 	 */
-	public int containerHeight();
+	int containerHeight();
 
 }

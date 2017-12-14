@@ -20,10 +20,14 @@ public class TetrisModel {
 
 	private Random random = new Random();
 
+	private TetriminoType nextTetriminoType = TetriminoType.getRandomType(random);
+
 	private int score = 0;
+	private int linesCleared = 0;
 	private TetrisScoreManager scoreManager = new TetrisScoreManager();
-	private int newHighScoreIndex = -1;
+
 	private boolean gameOver = false;
+	private TetrisGameSession gameSession;
 
 	private Tetrimino currentTetrimino;
 	private final TetrisBoard board = new TetrisBoard();
@@ -45,7 +49,7 @@ public class TetrisModel {
 			throw new IllegalStateException("TetrisModel.initGame : GAME_UPDATE_INTERVAL must be > 0.");
 
 		// clean up (for game restarts)
-		score = 0;
+		score = linesCleared = 0;
 		gameOver = false;
 		board.clear();
 		currentTetrimino = null;
@@ -66,16 +70,20 @@ public class TetrisModel {
 
 	private void gameOver() {
 		if (gameOver) return;
-		System.out.format("Game Over ! Score = %d\n", score);
-		newHighScoreIndex = scoreManager.submit("PLAYER", score); // TODO : player name input...
+
+		final String playerName = "PLAYER"; // TODO : player name input
+		System.out.format("Game Over ! Score = %d, name = \"%s\".\n", score, playerName);
+		final int newHighScoreIndex = scoreManager.submit(playerName, score);
 		scoreManager.save();
+
 		gameOver = true;
+		gameSession = new TetrisGameSession(score, newHighScoreIndex, linesCleared);
 	}
 
 	/**
 	 * Update the game's state by one tick.
 	 *
-	 * @eturn True if game over, false otherwise.
+	 * @return True if game over, false otherwise.
 	 */
 	public boolean updateGame() {
 		if (gameOver) return true;
@@ -85,10 +93,12 @@ public class TetrisModel {
 		if (gameOver) return true; // game over ?
 
 		// lines clearing & scoring
-		final int linesCleared = board.checkForCompleteLines();
-		if (linesCleared > 0) {
-			score += computeScore(linesCleared);
-			System.out.format("=> [%d] lines cleared !\n", linesCleared);
+		final int linesJustCleared = board.checkForCompleteLines();
+		if (linesJustCleared > 0) {
+			linesCleared += linesJustCleared;
+			score += computeScore(linesJustCleared);
+			System.out.format("=> [%d] lines cleared ! [%d] in total.\n",
+							  linesJustCleared, linesCleared);
 		}
 
 		// debug info
@@ -171,7 +181,7 @@ public class TetrisModel {
 	 * Generate a new, random tetrimino and assign it as the currently controlled one.
 	 */
 	private void generateNewTetrimino() {
-		final TetriminoType type = TetriminoType.values()[random.nextInt(TetriminoType.values().length)];
+		final TetriminoType type = TetriminoType.getRandomType(random);
 		generateNewTetrimino(type);
 	}
 
@@ -238,9 +248,9 @@ public class TetrisModel {
 	public ArrayList<TetrisHighScore> getHighscores() { return scoreManager.getHighscores(); }
 
 	/**
-	 * Get the index of the new high score (-1 if no new high score).
+	 * Get the informations about the last game.
 	 */
-	public int getNewHighScoreIndex() { return newHighScoreIndex; }
+	public TetrisGameSession getLastGameSession() { return gameSession; }
 
 	/**
 	 * Rotate the player's tetrimino.
@@ -273,7 +283,7 @@ public class TetrisModel {
 
 	/**
 	 * Get the tetrimino currently controlled by the player.
-	 * @return
+	 * @return The controlled Tetrimino.
 	 */
 	public Tetrimino getControlledTetrimino() { return currentTetrimino; }
 

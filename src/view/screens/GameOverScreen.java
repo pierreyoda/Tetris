@@ -6,6 +6,7 @@ import java.awt.Graphics;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import model.TetrisGameSession;
 import model.TetrisScoreManager.TetrisHighScore;
 import view.RenderingUtilities;
 
@@ -18,7 +19,7 @@ import view.RenderingUtilities;
  */
 public class GameOverScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50; // we want to be responsive to a skip command
-	private static final Color BACKGROUND_COLOR = Color.BLACK;
+	private static final Color BACKGROUND_COLOR = MainMenuScreen.BACKGROUND_COLOR;
 	private static final Color TEXT_COLOR = Color.WHITE;
 	private static final Color TEXT_COLOR_HIGHLIGHT = Color.YELLOW;
 	private static final long SCORE_HIGHLIGHT_BLINK_DELAY = 1_000_000_000; // in ns
@@ -39,9 +40,9 @@ public class GameOverScreen extends Screen {
 	private final ArrayList<TetrisHighScore> highscores;
 
 	/**
-	 * Index of the high score that was just set after a game over. -1 if null.
+	 * Informations about the game that was just played.
 	 */
-	private int newHighScoreIndex = -1;
+	private TetrisGameSession gameSession = null;
 
 	private long newHighScoreLastBlink = System.nanoTime();
 	private boolean newHighScoreHighlighted = true;
@@ -55,13 +56,13 @@ public class GameOverScreen extends Screen {
 	}
 
 	/**
-	 * After a game over, this method allows to define the high score that was
-	 * just set.
-	 * @param index Index of the high score (-1 if no new high score).
+	 * After a game over, this method allows to define the game session that
+	 * was just played.
+	 * @param gameSession Tetris game session informations.
 	 * @return The GameOverScreen instance.
 	 */
-	public GameOverScreen setNewHighScore(final int index) {
-		newHighScoreIndex = index;
+	public GameOverScreen setGameSession(final TetrisGameSession gameSession) {
+		this.gameSession = gameSession;
 
 		return this;
 	}
@@ -77,10 +78,29 @@ public class GameOverScreen extends Screen {
 		g.setFont(textFont);
 
 		final int w = container().containerWidth(), h = container().containerHeight();
+		final int newHighScoreIndex = onlyScores ? -1 : gameSession.newHighScoreIndex();
+
+		// game recap
+		if (!onlyScores) {
+			final int score = gameSession.score();
+			final int linesCleared = gameSession.linesCleared();
+
+			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (h / 10),
+				"GAME OVER !");
+			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (1.5 * h / 10),
+				String.format("Score : %d", score));
+			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int) (2 * h / 10),
+				String.format("Number of lines cleared : %d", linesCleared));
+		}
 
 		// high scores table
 		RenderingUtilities.drawCenteredText(g, textFont, w / 2, h / 4,
 			"----- HIGH SCORES -----");
+		if (!onlyScores && newHighScoreIndex >= 0) {
+			g.setColor(TEXT_COLOR_HIGHLIGHT);
+			RenderingUtilities.drawCenteredText(g, textFont, w / 2, (int)(h / 3.5),
+				"NEW HIGH SCORE !");
+		}
 		for (int i = 0; i < highscores.size(); i++) {
 			final TetrisHighScore highscore = highscores.get(i);
 			if (highscore.score <= 0) break;

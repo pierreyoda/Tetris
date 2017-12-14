@@ -1,6 +1,6 @@
 package view;
 
-import javax.swing.JFrame;
+import javax.swing.*;
 
 /**
  * The game's window.
@@ -14,7 +14,7 @@ public class TetrisWindow extends JFrame {
 		setTitle(WINDOW_TITLE);
 
 		// force application stop when closing the window
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
 		add(view);
 		pack();
