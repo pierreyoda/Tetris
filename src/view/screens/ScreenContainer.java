@@ -14,6 +14,11 @@ public interface ScreenContainer {
 	public void pushScreen(final Screen screen);
 
 	/**
+	 * Pop the previous Screen from the stack.
+	 */
+	public void deletePreviousScreen();
+
+	/**
 	 * Request to close the application.
 	 */
 	public void requestExit();

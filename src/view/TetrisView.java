@@ -70,6 +70,16 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		screenToAdd = screen;
 	}
 
+	/**
+	 * Try to remove the previous Screen from the stack.
+	 */
+	@Override
+	public void deletePreviousScreen() {
+		if (screens.size() < 3)
+			throw new IllegalStateException("TetrisView.deletePreviousScreen : stack too small.");
+		screens.remove(screens.size() - 2);
+	}
+
 	@Override
 	public void requestExit() {
 		timer.stop();

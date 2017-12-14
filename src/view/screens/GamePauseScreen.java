@@ -67,11 +67,12 @@ public class GamePauseScreen extends Screen {
 	public void keyPressed(final KeyEvent e) {
 		final int keyCode = e.getKeyCode();
 		switch (keyCode) {
-		// exit
+		// exit to main menu
 		case KeyEvent.VK_ESCAPE:
-			container().requestExit();
+			container().deletePreviousScreen();
+			resume = true;
 			break;
-		// resume
+		// resume the game
 		case KeyEvent.VK_ENTER:
 		case KeyEvent.VK_SPACE:
 			resume = true;
