@@ -22,7 +22,10 @@ import view.RenderingUtilities;
 public class MainMenuScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50; // we want to be responsive to a skip command
 
-	private static final Color BACKGROUND_COLOR = Color.BLACK;
+	private static final Font BANNER_FONT = new Font(Font.SERIF, Font.BOLD, 100);
+	private static final Color BANNER_COLOR = Color.BLACK;
+
+	public static final Color BACKGROUND_COLOR = new Color(60, 70, 80);
 	private static final Color BUTTON_TEXT_COLOR = Color.WHITE;
 	private static final Color BUTTON_SELECTED_TEXT_COLOR = Color.YELLOW;
 
@@ -53,10 +56,15 @@ public class MainMenuScreen extends Screen {
 	public void render(Graphics g, Font textFont) {
 		final int w = container().containerWidth(), h = container().containerHeight();
 
+		g.setFont(BANNER_FONT);
+		g.setColor(BANNER_COLOR);
+		RenderingUtilities.drawCenteredText(g, BANNER_FONT, w / 2, h / 20,
+			"TETRIS");
+
 		g.setFont(textFont);
 		for (int i = 0; i < BUTTONS_COUNT; i++) {
 			final String text = BUTTONS_TEXT[i];
-			final int x = w / 2, y = h / 3 + i * h / (BUTTONS_COUNT * 3);
+			final int x = w / 2, y = (int)(h / 2.5) + i * h / (BUTTONS_COUNT * 3);
 			g.setColor(i == selectionIndex ? BUTTON_SELECTED_TEXT_COLOR : BUTTON_TEXT_COLOR);
 			RenderingUtilities.drawCenteredText(g, textFont, x, y, text);
 		}
