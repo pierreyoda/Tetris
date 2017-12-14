@@ -32,6 +32,8 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 
 	private Timer timer;
 
+	private final TetrisSoundManager soundManager;
+
 	public TetrisView(final Screen screen) {
 		// sanity check
 		if (screen == null)
@@ -49,6 +51,10 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 		// screen management
 		timer = new Timer(1000, this);
 		setScreen(screen, true);
+
+		// sound & music
+        soundManager = new TetrisSoundManager();
+        soundManager.startMusic();
 	}
 
 	/**
