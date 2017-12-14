@@ -60,6 +60,7 @@ public class TetrisController {
 
 	public int getScore() { return model.getScore(); }
 	public ArrayList<TetrisHighScore> getHighscores() { return model.getHighscores(); }
+	public int getNewHighScoreIndex() { return model.getNewHighScoreIndex(); }
 	public Tetrimino getControlledTetrimino() { return model.getControlledTetrimino(); }
 	public TetrisBoardCell[][] getBoardCells() { return model.getBoardCells(); }
 

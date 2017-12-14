@@ -42,15 +42,19 @@ public class TetrisScoreManager {
 		}
 	}
 
-	/** Submit a new highscore. Returns true if the given score is enough for that,
-	 * false otherwise.
+	/** Submit a new highscore.
+	 *
+	 * @param name Name of the player. Must not contain the 'SCORE_DELIMITER' string.
+	 * @param score Score to be submitted.
+	 *
+	 * @return Index of the new high score (or -1 if score was not enough).
 	 */
-	public boolean submit(final String name, final int score) {
+	public int submit(final String name, final int score) {
 		if (name.contains(SCORE_DELIMITER))
 			throw new IllegalArgumentException(String.format(
 				"highscore name must not contain \"%s\"", name));
 
-		if (score < highscores.get(MAX_HIGHSCORES - 1).score) return false;
+		if (score < highscores.get(MAX_HIGHSCORES - 1).score) return -1;
 
 		for (int i = 0; i < MAX_HIGHSCORES; i++) {
 			if (score > highscores.get(i).score) {
@@ -60,10 +64,10 @@ public class TetrisScoreManager {
 				System.out.format(
 					"Score manager : added new high score (name = \"%s\", score = %d) at index %d\n",
 					highscore.name, highscore.score, i);
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 
 	/** Try to load the highscores from the file system.

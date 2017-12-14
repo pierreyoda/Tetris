@@ -22,6 +22,7 @@ public class TetrisModel {
 
 	private int score = 0;
 	private TetrisScoreManager scoreManager = new TetrisScoreManager();
+	private int newHighScoreIndex = -1;
 	private boolean gameOver = false;
 
 	private Tetrimino currentTetrimino;
@@ -65,8 +66,9 @@ public class TetrisModel {
 	}
 
 	private void gameOver() {
+		if (gameOver) return;
 		System.out.format("Game Over ! Score = %d\n", score);
-		scoreManager.submit("PLAYER", score); // TODO : player name input...
+		newHighScoreIndex = scoreManager.submit("PLAYER", score); // TODO : player name input...
 		scoreManager.save();
 		gameOver = true;
 	}
@@ -235,6 +237,11 @@ public class TetrisModel {
 	 * Get the current highscores (loaded from and saved to the file system).
 	 */
 	public ArrayList<TetrisHighScore> getHighscores() { return scoreManager.getHighscores(); }
+
+	/**
+	 * Get the index of the new high score (-1 if no new high score).
+	 */
+	public int getNewHighScoreIndex() { return newHighScoreIndex; }
 
 	/**
 	 * Rotate the player's tetrimino.

@@ -21,6 +21,8 @@ public class GameOverScreen extends Screen {
 	private static final int UPDATE_INTERVAL = 50; // we want to be responsive to a skip command
 	private static final Color BACKGROUND_COLOR = Color.BLACK;
 	private static final Color TEXT_COLOR = Color.WHITE;
+	private static final Color TEXT_COLOR_HIGHLIGHT = Color.YELLOW;
+	private static final long SCORE_HIGHLIGHT_BLINK_DELAY = 1_000_000_000; // in ns
 
 	/**
 	 * If true, exit the current screen.
@@ -37,11 +39,32 @@ public class GameOverScreen extends Screen {
 	 */
 	private final ArrayList<TetrisHighScore> highscores;
 
+	/**
+	 * Index of the high score that was just set after a game over. -1 if null.
+	 */
+	private int newHighScoreIndex = -1;
+
+	private long newHighScoreLastBlink = System.nanoTime();
+	private boolean newHighScoreHighlighted = true;
+	private Color newHighScoreCurrentColor = TEXT_COLOR_HIGHLIGHT;
+
 	public GameOverScreen(final ArrayList<TetrisHighScore> highscores, final boolean onlyScores) {
 		super(UPDATE_INTERVAL, BACKGROUND_COLOR);
 
 		this.highscores = highscores;
 		this.onlyScores = onlyScores;
+	}
+
+	/**
+	 * After a game over, this method allows to define the high score that was
+	 * just set.
+	 * @param index Index of the high score (-1 if no new high score).
+	 * @return The GameOverScreen instance.
+	 */
+	public GameOverScreen setNewHighScore(final int index) {
+		newHighScoreIndex = index;
+
+		return this;
 	}
 
 	@Override
@@ -63,11 +86,28 @@ public class GameOverScreen extends Screen {
 			if (highscore.score <= 0) break;
 
 			final int y = h / 3 + i * h / (highscores.size() * 4);
+
+			g.setColor(TEXT_COLOR);
+
+			// high scores after game over : highlight the new high score with blink
+			if (!onlyScores && i == newHighScoreIndex) {
+				final long t = System.nanoTime();
+				if (t - newHighScoreLastBlink >= SCORE_HIGHLIGHT_BLINK_DELAY) {
+					newHighScoreLastBlink = t;
+					newHighScoreCurrentColor = newHighScoreHighlighted ? TEXT_COLOR : TEXT_COLOR_HIGHLIGHT;
+					newHighScoreHighlighted = !newHighScoreHighlighted;
+				}
+				g.setColor(newHighScoreCurrentColor);
+			}
+
+			// name
 			drawCenteredText(g, textFont,     w / 3, y, highscore.name);
+			// score
 			drawCenteredText(g, textFont, 2 * w / 3, y, String.valueOf(highscore.score));
 		}
 
 		// instructions
+		g.setColor(TEXT_COLOR);
 		drawCenteredText(g, textFont, w / 2, (int)(h / 1.2),
 			"PRESS SPACE OR ENTER TO CONTINUE");
 	}

@@ -58,8 +58,10 @@ public class GameScreen extends Screen {
 	@Override
 	public boolean update() {
 		if (gameController.updateGame()) { // game over ?
-			container().pushScreen(new GameOverScreen(gameController.getHighscores(), false)); // request a game over recap Screen
-			return true; // terminate the Screen
+			final Screen nextScreen = new GameOverScreen(gameController.getHighscores(), false)
+				.setNewHighScore(gameController.getNewHighScoreIndex());
+			container().pushScreen(nextScreen); // request a game over recap Screen
+			return true; // terminate the GameScreen
 		}
 
 		return false;
