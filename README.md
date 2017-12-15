@@ -1,2 +1,2 @@
 # Tetris
-Simple Java classic Tetris game built with Swing.
+School project where the only requirements are to use Java and Swing.
