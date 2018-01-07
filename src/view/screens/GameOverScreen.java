@@ -66,12 +66,14 @@ public class GameOverScreen extends Screen {
             String.format("Number of lines cleared : %d", linesCleared));
 
         // player name input
-        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 2),
-            "INPUT PLAYER NAME");
-        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.8),
-            "(PRESS ENTER TWICE TO VALIDATE)");
-        RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.5),
-            playerName);
+        if (gameSession.newHighScoreIndex() >= 0) {
+            RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 2),
+                "INPUT PLAYER NAME");
+            RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.8),
+                "(PRESS ENTER TWICE TO VALIDATE)");
+            RenderingUtilities.drawCenteredText(g2d, textFont, w / 2, (int) (h / 1.5),
+                playerName);
+        }
     }
 
     @Override
@@ -105,7 +107,7 @@ public class GameOverScreen extends Screen {
         case KeyEvent.VK_DELETE:
             if (playerName.length() > 0) {
                 playerName = playerName.substring(0, playerName.length() - 1);
-                hasPressedEnter = false;
+                hasPressedEnter = false; // name modified : reset validation status
             }
             return;
         }
