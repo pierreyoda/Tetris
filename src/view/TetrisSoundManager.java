@@ -18,13 +18,13 @@ public class TetrisSoundManager {
             musicClip.open(audioIn);
         } catch (LineUnavailableException e){
             e.printStackTrace();
-            throw new RuntimeException("TetrisSoundManager: line unavailable.");
+            throw new RuntimeException("TetrisSoundManager : line unavailable.");
         } catch (UnsupportedAudioFileException e){
             e.printStackTrace();
-            throw new RuntimeException("TetrisSoundManager: unsupported audio file.");
+            throw new RuntimeException("TetrisSoundManager : unsupported audio file.");
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("TetrisSoundManager: Input/Output Error.");
+            throw new RuntimeException("TetrisSoundManager : input/Output Error.");
         }
     }
 
