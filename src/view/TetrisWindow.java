@@ -26,4 +26,5 @@ public class TetrisWindow extends JFrame {
 	public void displayGame() {
 		setVisible(true);
 	}
+
 }

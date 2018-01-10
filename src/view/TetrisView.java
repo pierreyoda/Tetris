@@ -67,7 +67,6 @@ public class TetrisView extends JPanel implements KeyListener, ActionListener, S
 	public void pushScreen(final Screen screen) {
 		if (screen == null)
 			throw new IllegalArgumentException("TetrisView.pushScreen : null Screen.");
-
 		screenToAdd = screen;
 	}
 

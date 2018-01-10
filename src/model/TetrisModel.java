@@ -168,7 +168,7 @@ public class TetrisModel {
 
 			// check for gameover
 			if (t.getY() < 0) {
-				System.out.format("gameover (x = %d, y = %d, arg1) !\n", t.getX(), t.getY());
+				System.out.format("gameover (x = %d, y = %d) !\n", t.getX(), t.getY());
 				gameOver();
 			}
 
