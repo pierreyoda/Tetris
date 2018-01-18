@@ -27,7 +27,7 @@ public class TetrisBoard {
 	}
 
 	/**
-	 * Add a new, 'freezed' tetrimino to the board.
+	 * Add a new, 'frozen' tetrimino to the board.
 	 */
 	public void addTetrimino(final Tetrimino tetrimino) {
 		for (int j = 0; j < 4 && (tetrimino.getY() + j) < HEIGHT; j++) {
@@ -35,7 +35,7 @@ public class TetrisBoard {
 				if (!tetrimino.getBlock(i, j)) continue;
 				final TetrisBoardCell cell = cells[tetrimino.getY() + j][tetrimino.getX() + i];
 				cell.present = true;
-				cell.color = tetrimino.getColor();
+				cell.color = new TetriminoColor(tetrimino.getColor());
 			}
 		}
 	}
@@ -84,14 +84,13 @@ public class TetrisBoard {
 				final TetrisBoardCell cell = cells[y][x];
 				if (!cell.present) continue;
 
-				// save block info & clear
-				final TetriminoColor color = new TetriminoColor(cell.color); // copy
+				// clear current cell
 				cell.present = false;
 
-				// move downwards
+				// 'move' it downwards
 				final TetrisBoardCell newCell = cells[y + 1][x];
 				newCell.present = true;
-				newCell.color = color;
+				newCell.color = new TetriminoColor(cell.color); // copy
 			}
 		}
 	}
