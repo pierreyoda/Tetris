@@ -58,7 +58,7 @@ public class TetrisModel {
 		generateNewTetrimino();
 
 		// quickstart for test games
-		if (true) {
+		if (false) {
 			for (int y = TetrisBoard.HEIGHT / 2; y < TetrisBoard.HEIGHT; y++) {
 				for (int x = 0; x + 1 < TetrisBoard.WIDTH && x < y / 3; x++) {
 					board.getCells()[y][x].present = true;
